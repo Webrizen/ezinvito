@@ -24,16 +24,16 @@ export const metadata = {
     "event dashboard",
     "guest list management",
   ],
-  authors: [{ name: "EzInvito Team", url: "https://ezinvito.com" }],
+  authors: [{ name: "EzInvito Team", url: "https://ezinvito.vercel.app" }],
   creator: "EzInvito",
   openGraph: {
     title: "EzInvito",
     description: "Create, invite, manage — the complete event toolkit.",
-    url: "https://ezinvito.com",
+    url: "https://ezinvito.vercel.app",
     siteName: "EzInvito",
     images: [
       {
-        url: "https://ezinvito.com/og-image.png",
+        url: "https://ezinvito.vercel.app/og-image.png",
         width: 1200,
         height: 630,
         alt: "EzInvito - Your Event, Elevated",
@@ -45,10 +45,20 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "EzInvito",
+    creator: '@shadow_jsx',
     description: "Plan. Invite. Celebrate. All in one place — EzInvito.",
-    images: ["https://ezinvito.com/og-image.png"],
+    images: ["https://ezinvito.vercel.app/og-image.png"],
   },
-  metadataBase: new URL("https://ezinvito.com"),
+  metadataBase: new URL("https://ezinvito.vercel.app"),
+  robots: {
+    index: true,
+    follow: true,
+  },
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({ children }) {
