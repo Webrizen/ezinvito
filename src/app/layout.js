@@ -1,6 +1,8 @@
 import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
+import Navbar from "@/components/system/navbar";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -45,7 +47,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "EzInvito",
-    creator: '@shadow_jsx',
+    creator: "@shadow_jsx",
     description: "Plan. Invite. Celebrate. All in one place — EzInvito.",
     images: ["https://ezinvito.vercel.app/og-image.png"],
   },
@@ -65,14 +67,17 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${bricolage.className} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        <ClerkProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar />
+            {children}
+          </ThemeProvider>
+        </ClerkProvider>
       </body>
     </html>
   );
