@@ -4,97 +4,58 @@ import Link from "next/link";
 export default function Home() {
   return (
     <>
-      <section className="py-8 mt-24">
-        <div className="mx-auto lg:max-w-7xl w-full px-5 sm:px-10 md:px-12 lg:px-5 flex flex-col lg:flex-row lg:items-stretch gap-10">
-          <div className="lg:w-1/2 lg:py-10 xl:py-12 text-center lg:text-left max-w-2xl md:max-w-3xl mx-auto ">
-            <h1 className="font-semibold leading-tight text-indigo-950 dark:text-white text-4xl md:text-5xl lg:text-6xl">
-              Events die. {" "}
-              <div className="relative after:absolute after:inset-x-0 after:h-3 after:bg-indigo-100 dark:after:bg-indigo-950 after:bottom-2 inline-block px-2">
-                <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-tr from-indigo-800 to-indigo-400">
-                Memories don’t.
-                </span>
-              </div>
+      <section className="w-full min-h-screen md:p-10 p-5">
+        <div className="container mx-auto w-full h-full bg-primary/5 dark:bg-accent/50 dark:text-inherit text-zinc-50 rounded-xl">
+          <div className="w-full space-y-6 py-24 px-4 md:text-center text-left flex flex-col items-center justify-center h-full">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight md:max-w-5xl bg-gradient-to-tr dark:from-zinc-300 dark:to-zinc-600 from-zinc-900 to-zinc-500 bg-clip-text text-transparent">
+            Create stunning digital invitations for any occasion with AI.
             </h1>
-            <p className="mt-8 text-gray-700 dark:text-gray-300 text-lg">
-            ezinvito doesn’t just manage your events. It captures every photo, RSVP, expense, and emotion — forever. 
-            Because the people you invite? They matter.
+
+            <p className="text-md md:text-xl dark:text-zinc-200 text-zinc-600 max-w-4xl">
+              Create stunning, customizable invitations for any occasion in
+              minutes. Share digitally or print - the choice is yours, and it's
+              all powered by AI. 
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
-              <Link
-                href="#"
-                className="flex items-center justify-center gap-x-2 px-5 py-2.5 border border-transparent bg-indigo-700 text-white"
-              >
-                Create Event
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  width={16}
-                  height={16}
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="w-4 h-4"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+
+            <div className="flex flex-row md:justify-center md:items-center justify-left items-start gap-4 pt-4 w-full">
+              <Link href="/auth/sign-up" className="bg-white text-zinc-900 hover:bg-zinc-100/80 md:px-8 md:py-3 px-6 py-3 rounded-full font-semibold md:text-lg text-sm transition-all dark:shadow-[inset_20px_30px_69px_-39px_rgba(0,_0,_0,_0.7)] shadow-[20px_30px_69px_-39px_rgba(0,_0,_0,_0.7)]">
+                Create Invitation
+              </Link>
+              <Link href="/showcase" className="border-2 dark:border-white border-zinc-900/50 dark:text-white hover:dark:text-zinc-900 text-zinc-900 hover:bg-white hover:text-zinc-900 hover:bg-opacity-10 md:px-8 md:py-3 px-6 py-3 rounded-full font-semibold md:text-lg text-sm transition-all">
+                See Examples
+              </Link>
+            </div>
+
+            <div className="flex md:items-center md:justify-center w-full md:flex-row flex-col gap-2 pt-4 dark:text-zinc-300 text-zinc-600">
+              <div className="flex -space-x-2">
+                {[1, 2, 3, 4].map((item) => (
+                  <img
+                    key={item}
+                    src={`https://randomuser.me/api/portraits/${
+                      item % 2 === 0 ? "women" : "men"
+                    }/${item}0.jpg`}
+                    className="w-10 h-10 rounded-full border-2 border-zinc-900/30"
+                    alt="Happy user"
                   />
-                </svg>
-              </Link>
-              <Link
-                href="/auth/sign-in"
-                className="flex items-center justify-center gap-x-2 px-5 py-2.5 border border-gray-200 text-indigo-700 dark:border-gray-800 dark:text-white"
-              >
-                Explore Features
-              </Link>
-            </div>
-            <div className="flex items-center gap-1 mt-10 justify-center lg:justify-start gap-x-3">
-              <div className="flex items-center -space-x-2">
-                <Image
-                  src="/placeholder.svg"
-                  width={2250}
-                  height={1400}
-                  alt="listener avatar"
-                  className="w-10 h-10 object-cover rounded-full ring-4 ring-white dark:ring-gray-950"
-                />
-                <Image
-                  src="/placeholder.svg"
-                  width={2250}
-                  height={1400}
-                  alt="listener avatar"
-                  className="w-10 h-10 object-cover rounded-full ring-4 ring-white dark:ring-gray-950"
-                />
-                <Image
-                  src="/placeholder.svg"
-                  width={2250}
-                  height={1400}
-                  alt="listener avatar"
-                  className="w-10 h-10 object-cover rounded-full ring-4 ring-white dark:ring-gray-950"
-                />
+                ))}
               </div>
-              <div className="flex flex-col justify-start items-start">
-                <span className="font-semibold text-lg text-gray-800 dark:text-gray-200">
-                  +12k
-                </span>
-                <span className="text-gray-600 text-sm dark:text-gray-300">
-                  Events created
-                </span>
+              <div>
+                <p className="text-sm">Trusted by 10,000+ happy customers</p>
+                <div className="flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <svg
+                      key={i}
+                      className="w-4 h-4 text-amber-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                  <span className="text-sm ml-1">4.9 (1.2k reviews)</span>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="lg:w-1/2 relative lg:h-auto max-w-2xl md:max-w-3xl mx-auto">
-            <div className="absolute left-1/2 -translate-x-1/2 bottom-8 px-10 py-1.5 bg-white text-center border border-gray-100 shadow-lg shadow-gray-200/40 rounded-md">
-              <span className="font-bold text-3xl text-indigo-950">+25</span>
-              <p className="text-gray-600">Event Templates</p>
-            </div>
-            <Image
-              src="/placeholder.svg"
-              width={500}
-              height={500}
-              alt="sidebiew image"
-              className="lg:w-full lg:h-full object-cover"
-            />
           </div>
         </div>
       </section>

@@ -8,16 +8,14 @@ export default function AuthLayout({ children }) {
           <div className="grid items-center md:grid-cols-2 gap-0 lg:gap-12">
             <div>
               <p className="inline-block text-sm font-medium bg-clip-text bg-gradient-to-l from-blue-600 to-violet-500 text-transparent dark:from-blue-400 dark:to-violet-400">
-              ReviveEdge - Authentication
+              EzInvito - Authentication
               </p>
               <div className="mt-4 md:mb-12 max-w-2xl">
                 <h1 className="mb-4 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-                You’re either evolving.  
-                Or giving up.
+                  Welcome to EzInvito - Your Invitation Management Solution
                 </h1>
                 <p className="md:text-xl text-md dark:text-slate-100/70 text-slate-950/70">
-                This portal isn’t for everyone. It's for those who know what it feels like to fall —  
-                and still crawl back. Log in. Lock in. And let the machine rewire you.
+                  A powerful tool designed to simplify the process of creating, managing, and sending invitations for any occasion. Whether you're planning a wedding, birthday party, corporate event, or any other gathering, EzInvito has got you covered.
                 </p>
               </div>
               <blockquote className="hidden md:block relative max-w-sm">
@@ -37,22 +35,22 @@ export default function AuthLayout({ children }) {
                 </svg>
                 <div className="relative z-40">
                   <p className="text-xl italic">
-                    “If you never take the risk of making enemies, you’ll never be able to make true allies.”
+                    “The Strongest Principle of Growth Lies in the Human Choice.”
                   </p>
                 </div>
                 <div className="mt-3">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
                       <img
-                        className="h-8 w-8 rounded-full"
-                        src="https://placehold.co/100x100"
+                        className="h-8 w-8 rounded-full object-cover aspect-square"
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/George_Eliot%2C_por_Fran%C3%A7ois_D%27Albert_Durade.jpg/500px-George_Eliot%2C_por_Fran%C3%A7ois_D%27Albert_Durade.jpg"
                         alt="Image Description"
                       />
                     </div>
                     <div className="grow ms-4">
-                      <div className="font-semibold">Shadow Architect</div>
+                      <div className="font-semibold">George Eliot</div>
                       <div className="text-xs dark:text-slate-100/70 text-slate-950/70">
-                        - The most effective way to gain control is to make your intentions invisible.
+                        - English novelist and poet
                       </div>
                     </div>
                   </div>

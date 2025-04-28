@@ -48,7 +48,7 @@ const Navbar = () => {
 
   return (
     <header className="p-2 dark:bg-zinc-900 bg-zinc-50 backdrop-blur-3xl sticky top-0 z-50">
-      <div className="md:max-w-7xl mx-auto flex justify-between items-center">
+      <div className="md:container mx-auto flex justify-between items-center md:px-20">
         <Link
           href="/"
           className="h-10 w-auto flex gap-2 items-center p-1 rounded-md hover:bg-[rgba(225,225,225,0.05)] mr-3"
@@ -152,10 +152,7 @@ const Navbar = () => {
               <UserButton />
             </>
           ) : (
-            <Button
-              className="bg-indigo-600 hover:bg-indigo-500 text-indigo-50"
-              radius="full"
-            >
+            <Button>
               <Link
                 href="/auth/sign-in"
                 className="flex items-center justify-center w-full h-full"
