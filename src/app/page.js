@@ -8,20 +8,26 @@ export default function Home() {
         <div className="container mx-auto w-full h-full bg-primary/5 dark:bg-accent/50 dark:text-inherit text-zinc-50 rounded-xl">
           <div className="w-full space-y-6 py-24 px-4 md:text-center text-left flex flex-col items-center justify-center h-full">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight md:max-w-5xl bg-gradient-to-tr dark:from-zinc-300 dark:to-zinc-600 from-zinc-900 to-zinc-500 bg-clip-text text-transparent">
-            Create stunning digital invitations for any occasion with AI.
+              Create stunning digital invitations for any occasion with AI.
             </h1>
 
             <p className="text-md md:text-xl dark:text-zinc-200 text-zinc-600 max-w-4xl">
               Create stunning, customizable invitations for any occasion in
               minutes. Share digitally or print - the choice is yours, and it's
-              all powered by AI. 
+              all powered by AI.
             </p>
 
             <div className="flex flex-row md:justify-center md:items-center justify-left items-start gap-4 pt-4 w-full">
-              <Link href="/auth/sign-up" className="bg-white text-zinc-900 hover:bg-zinc-100/80 md:px-8 md:py-3 px-6 py-3 rounded-full font-semibold md:text-lg text-sm transition-all dark:shadow-[inset_20px_30px_69px_-39px_rgba(0,_0,_0,_0.7)] shadow-[20px_30px_69px_-39px_rgba(0,_0,_0,_0.7)]">
+              <Link
+                href="/auth/sign-up"
+                className="bg-white text-zinc-900 hover:bg-zinc-100/80 md:px-8 md:py-3 px-6 py-3 rounded-full font-semibold md:text-lg text-sm transition-all dark:shadow-[inset_20px_30px_69px_-39px_rgba(0,_0,_0,_0.7)] shadow-[20px_30px_69px_-39px_rgba(0,_0,_0,_0.7)]"
+              >
                 Create Invitation
               </Link>
-              <Link href="/showcase" className="border-2 dark:border-white border-zinc-900/50 dark:text-white hover:dark:text-zinc-900 text-zinc-900 hover:bg-white hover:text-zinc-900 hover:bg-opacity-10 md:px-8 md:py-3 px-6 py-3 rounded-full font-semibold md:text-lg text-sm transition-all">
+              <Link
+                href="/showcase"
+                className="border-2 dark:border-white border-zinc-900/50 dark:text-white hover:dark:text-zinc-900 text-zinc-900 hover:bg-white hover:text</div>-zinc-900 hover:bg-opacity-10 md:px-8 md:py-3 p</div>x-6 py-3 rounded-full font-semibold md:text-lg text-sm transition-all"
+              >
                 See Examples
               </Link>
             </div>
@@ -56,6 +62,41 @@ export default function Home() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+      <section className="w-full py-20 bg-zinc-50 dark:bg-zinc-900">
+        <div className="container mx-auto px-5">
+          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center bg-gradient-to-r dark:from-white from-zinc-900 dark:to-zinc-400 to-zinc-600 bg-clip-text text-transparent">
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-6 max-w-3xl mx-auto">
+            {[
+              {
+                q: "Is there a free plan available?",
+                a: "Yes! We offer a generous free tier with access to basic features and limited exports.",
+              },
+              {
+                q: "Can I cancel anytime?",
+                a: "Of course! You can cancel your subscription at any time without any hidden fees.",
+              },
+              {
+                q: "Do I own the rights to the invitations I create?",
+                a: "Yes. All invitations you create are yours to use freely for personal or commercial purposes.",
+              },
+              {
+                q: "Can I collaborate with others on an invitation?",
+                a: "Yes! Invite team members or guests to view or edit your invitation in real-time.",
+              },
+            ].map((faq, idx) => (
+              <div
+                key={idx}
+                className="p-5 bg-white dark:bg-zinc-800 rounded-xl shadow-sm hover:shadow transition-shadow"
+              >
+                <h3 className="font-semibold text-lg">{faq.q}</h3>
+                <p className="text-zinc-600 dark:text-zinc-300 mt-2">{faq.a}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

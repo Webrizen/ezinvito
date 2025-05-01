@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/sheet";
 import EzInvito from "@/assets/logo.png";
 import { UserButton, useAuth } from "@clerk/nextjs";
+import { ThemeToggleButton } from "@/components/ui/theme-toggle-button";
 
 const Navbar = () => {
   const { setTheme, theme } = useTheme();
@@ -161,14 +162,7 @@ const Navbar = () => {
               </Link>
             </Button>
           )}
-          <Button
-            variant="ghost"
-            radius="full"
-            className="!min-h-[35px] !min-w-[35px] cursor-pointer"
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-          >
-            {theme === "light" ? <MoonIcon /> : <SunIcon />}
-          </Button>
+          <ThemeToggleButton variant="circle-blur" start="top-right" />
           <Sheet>
             <SheetTrigger className="w-10 h-10 md:hidden flex justify-center items-center hover:bg-zinc-100 dark:hover:bg-[rgba(225,225,225,0.1)] rounded">
               <svg
