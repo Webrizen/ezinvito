@@ -65,9 +65,9 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${bricolage.className} antialiased`}>
-        <ClerkProvider>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${bricolage.className} antialiased`} suppressHydrationWarning>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -77,8 +77,8 @@ export default function RootLayout({ children }) {
             <Navbar />
             {children}
           </ThemeProvider>
-        </ClerkProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

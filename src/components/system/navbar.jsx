@@ -153,10 +153,9 @@ const Navbar = () => {
               <UserButton />
             </>
           ) : (
-            <Button>
+            <Button asChild>
               <Link
                 href="/auth/sign-in"
-                className="flex items-center justify-center w-full h-full"
               >
                 Login
               </Link>
