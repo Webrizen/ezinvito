@@ -1,4 +1,3 @@
-// models/Event.js
 import mongoose from 'mongoose';
 
 const eventSchema = new mongoose.Schema({
@@ -22,7 +21,16 @@ const eventSchema = new mongoose.Schema({
     fontFamily: String,
     backgroundImage: String
   },
-  customUrl: { type: String, unique: true },
+  customSlug: { 
+    type: String,
+    unique: true,
+    lowercase: true,
+    trim: true,
+    validate: {
+      validator: v => /^[a-z0-9-]+$/.test(v),
+      message: "Only letters, numbers and hyphens allowed"
+    }
+  },
   privacy: {
     type: String,
     enum: ['public', 'private', 'invite-only'],
