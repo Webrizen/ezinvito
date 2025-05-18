@@ -72,13 +72,7 @@ export default function Page() {
     return (
         <div className="bg-zinc-50 dark:bg-zinc-900 p-4">
             <div className="w-full">
-                <h1 className="text-2xl md:text-3xl font-bold text-zinc-800 dark:text-zinc-100 mb-6">Create Your Event</h1>
-
-                {error && (
-                    <div className="mb-4 p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded-lg">
-                        {error}
-                    </div>
-                )}
+                <h1 className="text-2xl md:text-3xl font-bold text-zinc-800 dark:text-zinc-100 mb-6">Create Your Event</h1>      
 
                 <form onSubmit={handleSubmit} className="grid md:grid-cols-[2fr_1fr] gap-6">
                     {/* Main Form */}
@@ -189,7 +183,7 @@ export default function Page() {
                                 Custom URL
                             </label>
                             <div className="flex items-center border border-zinc-300 dark:border-zinc-600 rounded-lg overflow-hidden">
-                                <span className="px-3 ml-2 rounded-4xl text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-700">evently.com/</span>
+                                <span className="px-3 ml-2 rounded-4xl text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-700">ezinvito.webrizen.com/</span>
                                 <input
                                     id="customSlug"
                                     type="text"
@@ -366,6 +360,11 @@ export default function Page() {
                         >
                             {isSubmitting ? 'Creating...' : 'Create Event'}
                         </button>
+                        {error && (
+                    <div className="my-4 p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded-lg">
+                        {error}
+                    </div>
+                )}
                     </div>
 
                     {/* Sidebar */}
