@@ -10,16 +10,10 @@ const eventSchema = new mongoose.Schema({
     onlineEvent: { type: Boolean, default: false },
     meetingLink: String
   },
-  host: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  userId: { type: String, required: true },
+  host: { type: String, required: true },
   invitationDesign: {
     templateId: { type: String, required: true, default: 'classic' },
-    customColors: {
-      primary: String,
-      secondary: String,
-      accent: String
-    },
-    fontFamily: String,
-    backgroundImage: String
   },
   customSlug: { 
     type: String,
