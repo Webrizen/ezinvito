@@ -1,7 +1,22 @@
-import Link from 'next/link'
-import React from 'react'
+import Link from 'next/link';
+import React from 'react';
 
-export default function page() {
+export default async function page() {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/events`, {
+        method: 'GET',
+        cache: 'no-store',
+    });
+    const events = await response.json();
+    console.log(events);
+
+    if (events.error) {
+        return <div className="text-red-500 text-center mt-10">{events.error}</div>;
+    }
+    
+    if (!response.ok) {
+        return <div className="text-red-500 text-center mt-10">Error fetching</div>;
+    }
+
     return (
         <>
             <div className="flex flex-col md:flex-row gap-y-8 items-center text-center md:text-left md:items-start md:justify-between">
@@ -22,7 +37,36 @@ export default function page() {
                     </Link>
                 </div>
             </div>
-            invitations
+            <div className="mt-10">
+                {!events || events.length === 0 ? (
+                    <p className="text-zinc-600 dark:text-zinc-400">You have no events yet.</p>
+                ) : (
+                    <ul className="space-y-4">
+                        {events.map((event) => (
+                            <li
+                                key={event._id || event.customSlug}
+                                className="border border-zinc-200 dark:border-zinc-700 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                            >
+                                <Link
+                                    href={`/events/${event.customSlug || event._id}`}
+                                    className="block"
+                                >
+                                    <h2 className="text-xl font-semibold text-zinc-800 dark:text-zinc-100">
+                                        {event.title}
+                                    </h2>
+                                    <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                                        Hosted by: {event.hostName}
+                                    </p>
+                                    <p className="text-sm text-zinc-500 dark:text-zinc-500 mt-1">
+                                        {event.date ? new Date(event.date).toLocaleString() : 'No date'} -{' '}
+                                        {event.endDate ? new Date(event.endDate).toLocaleString() : 'No end date'}
+                                    </p>
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
         </>
     )
 }

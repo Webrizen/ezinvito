@@ -1,18 +1,19 @@
 import { NextResponse } from 'next/server';
-import { getAuth } from '@clerk/nextjs/server';
 import Event from "@/models/event";
 import connectDB from '@/lib/db';
 import crypto from 'crypto';
+import { auth } from "@clerk/nextjs/server";
 
 
 export async function POST(request) {
-  await connectDB();
-  const { userId } = getAuth(request);
-
+  const { userId } = await auth();
+  
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  await connectDB();
+  
   try {
     const body = await request.json();
     // Generate custom URL if not provided
@@ -48,12 +49,13 @@ export async function POST(request) {
 }
 
 export async function GET(request) {
-  await connectDB();
-  const { userId } = getAuth(request);
+  const { userId } = await auth();
   
   if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized to access data!" }, { status: 401 });
   }
+  
+  await connectDB();
 
   try {
     const events = await Event.find({ userId });
