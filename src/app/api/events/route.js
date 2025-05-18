@@ -49,10 +49,15 @@ export async function POST(request) {
 }
 
 export async function GET(request) {
-  const { userId } = await auth();
-  
+  const { userId: clerkUserId } = await auth(); 
+
+  const url = new URL(request.url);
+  const userIdFromQuery = url.searchParams.get('userId');
+
+  const userId = clerkUserId || userIdFromQuery;
+
   if (!userId) {
-    return NextResponse.json({ error: "Unauthorized to access data!" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   
   await connectDB();
