@@ -1,16 +1,26 @@
 import { NextResponse } from 'next/server';
-import { getAuth } from '@clerk/nextjs/server';
+import { auth } from '@clerk/nextjs/server';
 import Event from "@/models/event";
 import connectDB from '@/lib/db';
 
 export async function GET(request, { params }) {
   await connectDB();
-  const { userId } = getAuth(request);
+  const { userId: clerkUserId } = await auth();
+
+  const url = new URL(request.url);
+  const userIdFromQuery = url.searchParams.get('userId');
+
+  const userId = clerkUserId || userIdFromQuery;
+
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const { slug } = await params;
 
   try {
     const event = await Event.findOne({
-      customSlug: params.slug,
-      host: userId
+      customSlug: slug,
+      userId: userId
     });
 
     if (!event) {

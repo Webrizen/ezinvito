@@ -44,6 +44,6 @@ const eventSchema = new mongoose.Schema({
 
 // Add index for better query performance
 eventSchema.index({ host: 1 });
-eventSchema.index({ customUrl: 1 }, { unique: true });
+eventSchema.index({ customSlug: 1 }, { unique: true });
 
 export default mongoose.models.Event || mongoose.model('Event', eventSchema);
