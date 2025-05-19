@@ -10,26 +10,55 @@ export default function Page() {
     const [error, setError] = useState('');
     const [formData, setFormData] = useState({
         title: '',
+        eventType: 'meetup',
         host: '',
         description: '',
         date: '',
         endDate: '',
-        venue: '',
+        location: {
+            venue: '',
+            address: {
+                street: '',
+                city: '',
+                state: '',
+                zipCode: '',
+                country: ''
+            },
+            coordinates: [0, 0],
+            onlineEvent: false,
+            meetingLink: null
+        },
         customSlug: '',
         privacy: 'invite-only',
         templateId: 'classic',
         galleryEnabled: true,
         guestbookEnabled: true,
         qrcodeEnabled: true,
-        rsvpDeadline: ''
+        rsvpDeadline: '',
+        tags: []
     });
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value
-        }));
+
+        // Handle nested objects with dot notation (e.g., "location.venue")
+        if (name.includes('.')) {
+            const [parent, child] = name.split('.');
+            setFormData(prev => ({
+                ...prev,
+                [parent]: {
+                    ...prev[parent],
+                    [child]: type === 'checkbox' ? checked : value
+                }
+            }));
+        }
+        // Handle top-level fields
+        else {
+            setFormData(prev => ({
+                ...prev,
+                [name]: type === 'checkbox' ? checked : value
+            }));
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -72,7 +101,7 @@ export default function Page() {
     return (
         <div className="bg-zinc-50 dark:bg-zinc-900 p-4">
             <div className="w-full">
-                <h1 className="text-2xl md:text-3xl font-bold text-zinc-800 dark:text-zinc-100 mb-6">Create Your Event</h1>      
+                <h1 className="text-2xl md:text-3xl font-bold text-zinc-800 dark:text-zinc-100 mb-6">Create Your Event</h1>
 
                 <form onSubmit={handleSubmit} className="grid md:grid-cols-[2fr_1fr] gap-6">
                     {/* Main Form */}
@@ -92,6 +121,34 @@ export default function Page() {
                                 placeholder="Event title*"
                                 className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
                             />
+                        </div>
+
+                        {/* Event Type */}
+                        <div>
+                            <label htmlFor="eventType" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                Event Type *
+                            </label>
+                            <select
+                                id="eventType"
+                                name="eventType"
+                                value={formData.eventType}
+                                onChange={handleChange}
+                                required
+                                className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
+                            >
+                                <option value="conference">Conference</option>
+                                <option value="workshop">Workshop</option>
+                                <option value="meetup">Meetup</option>
+                                <option value="webinar">Webinar</option>
+                                <option value="social">Social</option>
+                                <option value="concert">Concert</option>
+                                <option value="exhibition">Exhibition</option>
+                                <option value="networking">Networking</option>
+                                <option value="hackathon">Hackathon</option>
+                                <option value="wedding">Wedding</option>
+                                <option value="birthday">Birthday</option>
+                                <option value="corporate">Corporate</option>
+                            </select>
                         </div>
 
                         {/* Host Name */}
@@ -161,20 +218,160 @@ export default function Page() {
 
                         {/* Location */}
                         <div className="space-y-4">
-                            <div>
-                                <label htmlFor="venue" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                                    Venue Name (optional)
-                                </label>
-                                <input
-                                    id="venue"
-                                    type="text"
-                                    name="venue"
-                                    value={formData.venue}
-                                    onChange={handleChange}
-                                    placeholder="Venue name"
-                                    className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
-                                />
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label htmlFor="venue" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                        Venue Name
+                                    </label>
+                                    <input
+                                        id="venue"
+                                        type="text"
+                                        name="venue"
+                                        value={formData.location.venue}
+                                        onChange={handleChange}
+                                        placeholder="Venue name"
+                                        className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="city" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                        City
+                                    </label>
+                                    <input
+                                        id="city"
+                                        type="text"
+                                        name="city"
+                                        value={formData.location.address.city}
+                                        onChange={(e) => setFormData(prev => ({
+                                            ...prev,
+                                            location: {
+                                                ...prev.location,
+                                                address: {
+                                                    ...prev.location.address,
+                                                    city: e.target.value
+                                                }
+                                            }
+                                        }))}
+                                        placeholder="City"
+                                        className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
+                                    />
+                                </div>
                             </div>
+
+                            <div className="grid grid-cols-3 gap-4">
+                                <div>
+                                    <label htmlFor="state" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                        State/Region
+                                    </label>
+                                    <input
+                                        id="state"
+                                        type="text"
+                                        name="state"
+                                        value={formData.location.address.state}
+                                        onChange={(e) => setFormData(prev => ({
+                                            ...prev,
+                                            location: {
+                                                ...prev.location,
+                                                address: {
+                                                    ...prev.location.address,
+                                                    state: e.target.value
+                                                }
+                                            }
+                                        }))}
+                                        placeholder="State/Region"
+                                        className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="zipCode" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                        ZIP Code
+                                    </label>
+                                    <input
+                                        id="zipCode"
+                                        type="text"
+                                        name="zipCode"
+                                        value={formData.location.address.zipCode}
+                                        onChange={(e) => setFormData(prev => ({
+                                            ...prev,
+                                            location: {
+                                                ...prev.location,
+                                                address: {
+                                                    ...prev.location.address,
+                                                    zipCode: e.target.value
+                                                }
+                                            }
+                                        }))}
+                                        placeholder="ZIP/Postal code"
+                                        className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="country" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                        Country
+                                    </label>
+                                    <input
+                                        id="country"
+                                        type="text"
+                                        name="country"
+                                        value={formData.location.address.country}
+                                        onChange={(e) => setFormData(prev => ({
+                                            ...prev,
+                                            location: {
+                                                ...prev.location,
+                                                address: {
+                                                    ...prev.location.address,
+                                                    country: e.target.value
+                                                }
+                                            }
+                                        }))}
+                                        placeholder="Country"
+                                        className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="flex items-center gap-3 p-3 border border-zinc-300 dark:border-zinc-600 rounded-lg cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800">
+                                    <input
+                                        type="checkbox"
+                                        name="onlineEvent"
+                                        checked={formData.location.onlineEvent}
+                                        onChange={(e) => setFormData(prev => ({
+                                            ...prev,
+                                            location: {
+                                                ...prev.location,
+                                                onlineEvent: e.target.checked
+                                            }
+                                        }))}
+                                        className="w-4 h-4 text-zinc-600 dark:text-zinc-500 focus:ring-zinc-500 border-zinc-300 dark:border-zinc-600 rounded"
+                                    />
+                                    <span className="text-sm text-zinc-700 dark:text-zinc-300">This is an online event</span>
+                                </label>
+                            </div>
+
+                            {formData.location.onlineEvent && (
+                                <div>
+                                    <label htmlFor="meetingLink" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                        Meeting Link *
+                                    </label>
+                                    <input
+                                        id="meetingLink"
+                                        type="url"
+                                        name="meetingLink"
+                                        value={formData.location.meetingLink || ''}
+                                        onChange={(e) => setFormData(prev => ({
+                                            ...prev,
+                                            location: {
+                                                ...prev.location,
+                                                meetingLink: e.target.value
+                                            }
+                                        }))}
+                                        required={formData.location.onlineEvent}
+                                        placeholder="https://zoom.us/j/1234567890"
+                                        className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
+                                    />
+                                </div>
+                            )}
                         </div>
 
                         {/* Custom URL */}
@@ -352,6 +549,24 @@ export default function Page() {
                             />
                         </div>
 
+                        {/* Tags */}
+                        <div>
+                            <label htmlFor="tags" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                Tags (comma separated)
+                            </label>
+                            <input
+                                id="tags"
+                                type="text"
+                                value={formData.tags.join(', ')}
+                                onChange={(e) => setFormData(prev => ({
+                                    ...prev,
+                                    tags: e.target.value.split(',').map(tag => tag.trim())
+                                }))}
+                                placeholder="tech, conference, networking"
+                                className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
+                            />
+                        </div>
+
                         {/* Submit Button */}
                         <button
                             type="submit"
@@ -361,10 +576,10 @@ export default function Page() {
                             {isSubmitting ? 'Creating...' : 'Create Event'}
                         </button>
                         {error && (
-                    <div className="my-4 p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded-lg">
-                        {error}
-                    </div>
-                )}
+                            <div className="my-4 p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded-lg">
+                                {error}
+                            </div>
+                        )}
                     </div>
 
                     {/* Sidebar */}

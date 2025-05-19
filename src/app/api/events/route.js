@@ -7,17 +7,17 @@ import { auth } from "@clerk/nextjs/server";
 
 export async function POST(request) {
   const { userId } = await auth();
-  
+
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   await connectDB();
-  
+
   try {
     const body = await request.json();
     // Generate custom URL if not provided
-    if (!body.customSlug) {
+    if (!body.customSlug || body.customSlug.trim() === '') {
       body.customSlug = generateCustomUrl(body.title);
     }
 
@@ -26,7 +26,7 @@ export async function POST(request) {
       ...body,
       userId,
       qrSettings: {
-        enabled: body.qrcodeEnabled !== false, 
+        enabled: body.qrcodeEnabled !== false,
         expiresAt: body.endDate || body.date,
         secretKey: crypto.randomBytes(32).toString('hex')
       }
@@ -42,14 +42,14 @@ export async function POST(request) {
       );
     }
     return NextResponse.json(
-      { error: error.message }, 
+      { error: error.message },
       { status: 400 }
     );
   }
 }
 
 export async function GET(request) {
-  const { userId: clerkUserId } = await auth(); 
+  const { userId: clerkUserId } = await auth();
 
   const url = new URL(request.url);
   const userIdFromQuery = url.searchParams.get('userId');
@@ -59,7 +59,7 @@ export async function GET(request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  
+
   await connectDB();
 
   try {
@@ -76,6 +76,6 @@ export async function GET(request) {
 function generateCustomUrl(title) {
   return title.toLowerCase()
     .replace(/\s+/g, '-')
-    .replace(/[^\w-]+/g, '') 
+    .replace(/[^\w-]+/g, '')
     .substring(0, 50) + '-' + Math.random().toString(36).substring(2, 7);
 }
