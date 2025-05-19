@@ -161,23 +161,7 @@ export default async function Page({ params }) {
                 <h3 className="text-lg font-semibold text-zinc-800 dark:text-white mb-4">Event QR Code</h3>
                 {event.qrSettings.enabled ? (
                   <div className="flex flex-col items-center">
-                    <div className="p-4 bg-white dark:bg-zinc-700 rounded-lg border border-gray-200 dark:border-zinc-600 mb-4">
-                      <QRCodeWithLogo url={qrCodeUrl} />
-                    </div>
-                    <p className="text-sm text-zinc-600 dark:text-zinc-300 text-center mb-2">
-                      Scan this QR code to view the event
-                    </p>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400 text-center">
-                      Expires: {formatDate(event.qrSettings.expiresAt)}
-                    </p>
-                    <div className="mt-4 w-full grid md:grid-cols-1 gap-4">
-                      <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg transition duration-200">
-                        Download QR Code
-                      </button>
-                      <button className="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 py-3 px-4 rounded-lg transition duration-200">
-                        Download Invitation Pass
-                      </button>
-                    </div>
+                      <QRCodeWithLogo url={qrCodeUrl} expiresAt={event.qrSettings.expiresAt} eventName={event.title} eventDescription={event.description} attendee="Akash & his wife" host={event.host} eventStartTime={event.date} eventId={event._id} location={event} />
                   </div>
                 ) : (
                   <div className="text-center py-8">
