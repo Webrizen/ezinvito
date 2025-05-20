@@ -7,7 +7,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Edit2 } from 'lucide-react';
+import { Eye, FolderIcon, PencilIcon, TrashIcon, UsersRoundIcon } from 'lucide-react';
+import Link from 'next/link';
 
 export default async function Page({ params }) {
   const { slug } = await params;
@@ -69,8 +70,7 @@ export default async function Page({ params }) {
                 <div className="bg-zinc-50 dark:bg-zinc-800 p-5 rounded-xl border border-zinc-100 dark:border-zinc-600 transition-colors duration-300">
                   <h3 className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-2">Event Type</h3>
                   <p className="text-lg font-medium text-zinc-800 dark:text-white">
-                    {event.location.onlineEvent ? 'Online Event' : 'In-Person Event'}
-                  </p>
+                    {(event.location.onlineEvent ? 'Online Event' : 'In-Person Event') + ` - ${event.eventType}`}                  </p>
                 </div>
                 <div className="bg-zinc-50 dark:bg-zinc-800 p-5 rounded-xl border border-zinc-100 dark:border-zinc-600 transition-colors duration-300">
                   <h3 className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-2">Start Date</h3>
@@ -158,10 +158,10 @@ export default async function Page({ params }) {
             <div className="space-y-6">
               {/* QR Code */}
               <div className="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl p-6 shadow-sm transition-colors duration-300">
-                <h3 className="text-lg font-semibold text-zinc-800 dark:text-white mb-4">Event QR Code</h3>
+                <h3 className="text-lg font-semibold text-zinc-800 dark:text-white mb-4 text-center">Event QR Code</h3>
                 {event.qrSettings.enabled ? (
                   <div className="flex flex-col items-center">
-                      <QRCodeWithLogo url={qrCodeUrl} expiresAt={event.qrSettings.expiresAt} eventName={event.title} eventDescription={event.description} attendee="Akash & his wife" host={event.host} eventStartTime={event.date} eventId={event._id} location={event} />
+                    <QRCodeWithLogo url={qrCodeUrl} expiresAt={event.qrSettings.expiresAt} eventName={event.title} eventDescription={event.description} attendee="Demo User" host={event.host} eventStartTime={event.date} eventId={event._id} location={event.location} />
                   </div>
                 ) : (
                   <div className="text-center py-8">
@@ -173,27 +173,33 @@ export default async function Page({ params }) {
               {/* Quick Actions */}
               <div className="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl p-6 shadow-sm transition-colors duration-300">
                 <h3 className="text-lg font-semibold text-zinc-800 dark:text-white mb-4">Quick Actions</h3>
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-5 gap-4">
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button className="w-full flex items-center justify-center cursor-pointer p-3 bg-zinc-50 dark:bg-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-600 rounded-lg transition duration-200">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-zinc-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                          </svg>
+                          <PencilIcon className="size-4 text-zinc-400" />
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>Edit Event Details</p>
                       </TooltipContent>
                     </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link href={`/event/${slug || "not-found"}`} target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-center cursor-pointer p-3 bg-zinc-50 dark:bg-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-600 rounded-lg transition duration-200">
+                          <Eye className="size-4 text-zinc-400" />
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>View Event Details</p>
+                      </TooltipContent>
+                    </Tooltip>
 
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button className="w-full flex items-center justify-center cursor-pointer p-3 bg-zinc-50 dark:bg-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-600 rounded-lg transition duration-200">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-zinc-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-                          </svg>
+                          <UsersRoundIcon className="size-4 text-zinc-400" />
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>
@@ -204,9 +210,7 @@ export default async function Page({ params }) {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button className="w-full flex items-center justify-center cursor-pointer p-3 bg-zinc-50 dark:bg-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-600 rounded-lg transition duration-200">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-zinc-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a2 2 0 000-2.828L13.485 5.1a2 2 0 00-2.828 0L10 5.757v8.486zM16 18H9.071l6-6H16a2 2 0 012 2v2a2 2 0 01-2 2z" clipRule="evenodd" />
-                          </svg>
+                          <FolderIcon className="size-4 text-zinc-400" />
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>
@@ -217,9 +221,7 @@ export default async function Page({ params }) {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button className="w-full flex items-center justify-center cursor-pointer p-3 bg-red-50 hover:bg-red-100 dark:bg-red-900/30 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 rounded-lg transition duration-200">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                          </svg>
+                          <TrashIcon className="size-4 text-red-400" />
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>

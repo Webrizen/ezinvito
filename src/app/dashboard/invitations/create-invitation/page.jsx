@@ -26,7 +26,7 @@ export default function Page() {
             },
             coordinates: [0, 0],
             onlineEvent: false,
-            meetingLink: null
+            meetingLink: ''
         },
         customSlug: '',
         privacy: 'invite-only',
@@ -41,16 +41,37 @@ export default function Page() {
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
 
-        // Handle nested objects with dot notation (e.g., "location.venue")
-        if (name.includes('.')) {
-            const [parent, child] = name.split('.');
+        // Handle location.address fields
+        if (name.startsWith('location.address.')) {
+            const field = name.split('location.address.')[1];
             setFormData(prev => ({
                 ...prev,
-                [parent]: {
-                    ...prev[parent],
-                    [child]: type === 'checkbox' ? checked : value
+                location: {
+                    ...prev.location,
+                    address: {
+                        ...prev.location.address,
+                        [field]: type === 'checkbox' ? checked : value
+                    }
                 }
             }));
+        }
+        // Handle direct location fields
+        else if (name.startsWith('location.')) {
+            const field = name.split('location.')[1];
+            setFormData(prev => ({
+                ...prev,
+                location: {
+                    ...prev.location,
+                    [field]: type === 'checkbox' ? checked : value
+                }
+            }));
+        }
+        // Handle tags separately
+        else if (name === 'tags') {
+            const tagsArray = value.split(',')
+                .map(tag => tag.trim())
+                .filter(tag => tag.length > 0);
+            setFormData(prev => ({ ...prev, tags: tagsArray }));
         }
         // Handle top-level fields
         else {
@@ -63,6 +84,7 @@ export default function Page() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log('Submitting data:', formData); // Debug log
 
         if (!userId) {
             setError('Please sign in to create an event');
@@ -92,6 +114,7 @@ export default function Page() {
             const event = await response.json();
             router.push(`/dashboard/invitations/${event.customSlug || event._id}`);
         } catch (err) {
+            console.error('Submission error:', err);
             setError(err.message);
         } finally {
             setIsSubmitting(false);
@@ -210,7 +233,6 @@ export default function Page() {
                                     name="endDate"
                                     value={formData.endDate}
                                     onChange={handleChange}
-                                    placeholder="End date (optional)"
                                     className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
                                 />
                             </div>
@@ -226,7 +248,7 @@ export default function Page() {
                                     <input
                                         id="venue"
                                         type="text"
-                                        name="venue"
+                                        name="location.venue"
                                         value={formData.location.venue}
                                         onChange={handleChange}
                                         placeholder="Venue name"
@@ -240,18 +262,9 @@ export default function Page() {
                                     <input
                                         id="city"
                                         type="text"
-                                        name="city"
+                                        name="location.address.city"
                                         value={formData.location.address.city}
-                                        onChange={(e) => setFormData(prev => ({
-                                            ...prev,
-                                            location: {
-                                                ...prev.location,
-                                                address: {
-                                                    ...prev.location.address,
-                                                    city: e.target.value
-                                                }
-                                            }
-                                        }))}
+                                        onChange={handleChange}
                                         placeholder="City"
                                         className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
                                     />
@@ -266,18 +279,9 @@ export default function Page() {
                                     <input
                                         id="state"
                                         type="text"
-                                        name="state"
+                                        name="location.address.state"
                                         value={formData.location.address.state}
-                                        onChange={(e) => setFormData(prev => ({
-                                            ...prev,
-                                            location: {
-                                                ...prev.location,
-                                                address: {
-                                                    ...prev.location.address,
-                                                    state: e.target.value
-                                                }
-                                            }
-                                        }))}
+                                        onChange={handleChange}
                                         placeholder="State/Region"
                                         className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
                                     />
@@ -289,18 +293,9 @@ export default function Page() {
                                     <input
                                         id="zipCode"
                                         type="text"
-                                        name="zipCode"
+                                        name="location.address.zipCode"
                                         value={formData.location.address.zipCode}
-                                        onChange={(e) => setFormData(prev => ({
-                                            ...prev,
-                                            location: {
-                                                ...prev.location,
-                                                address: {
-                                                    ...prev.location.address,
-                                                    zipCode: e.target.value
-                                                }
-                                            }
-                                        }))}
+                                        onChange={handleChange}
                                         placeholder="ZIP/Postal code"
                                         className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
                                     />
@@ -312,18 +307,9 @@ export default function Page() {
                                     <input
                                         id="country"
                                         type="text"
-                                        name="country"
+                                        name="location.address.country"
                                         value={formData.location.address.country}
-                                        onChange={(e) => setFormData(prev => ({
-                                            ...prev,
-                                            location: {
-                                                ...prev.location,
-                                                address: {
-                                                    ...prev.location.address,
-                                                    country: e.target.value
-                                                }
-                                            }
-                                        }))}
+                                        onChange={handleChange}
                                         placeholder="Country"
                                         className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
                                     />
@@ -334,15 +320,9 @@ export default function Page() {
                                 <label className="flex items-center gap-3 p-3 border border-zinc-300 dark:border-zinc-600 rounded-lg cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800">
                                     <input
                                         type="checkbox"
-                                        name="onlineEvent"
+                                        name="location.onlineEvent"
                                         checked={formData.location.onlineEvent}
-                                        onChange={(e) => setFormData(prev => ({
-                                            ...prev,
-                                            location: {
-                                                ...prev.location,
-                                                onlineEvent: e.target.checked
-                                            }
-                                        }))}
+                                        onChange={handleChange}
                                         className="w-4 h-4 text-zinc-600 dark:text-zinc-500 focus:ring-zinc-500 border-zinc-300 dark:border-zinc-600 rounded"
                                     />
                                     <span className="text-sm text-zinc-700 dark:text-zinc-300">This is an online event</span>
@@ -357,15 +337,9 @@ export default function Page() {
                                     <input
                                         id="meetingLink"
                                         type="url"
-                                        name="meetingLink"
-                                        value={formData.location.meetingLink || ''}
-                                        onChange={(e) => setFormData(prev => ({
-                                            ...prev,
-                                            location: {
-                                                ...prev.location,
-                                                meetingLink: e.target.value
-                                            }
-                                        }))}
+                                        name="location.meetingLink"
+                                        value={formData.location.meetingLink}
+                                        onChange={handleChange}
                                         required={formData.location.onlineEvent}
                                         placeholder="https://zoom.us/j/1234567890"
                                         className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
@@ -557,11 +531,9 @@ export default function Page() {
                             <input
                                 id="tags"
                                 type="text"
+                                name="tags"
                                 value={formData.tags.join(', ')}
-                                onChange={(e) => setFormData(prev => ({
-                                    ...prev,
-                                    tags: e.target.value.split(',').map(tag => tag.trim())
-                                }))}
+                                onChange={handleChange}
                                 placeholder="tech, conference, networking"
                                 className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
                             />

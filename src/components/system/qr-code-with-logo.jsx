@@ -25,14 +25,28 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('en-US', options);
 };
 
+const formatFullAddress = (location) => {
+  const { venue, address } = location || {};
+  const { street, city, state, zipCode, country } = address || {};
+
+  const parts = [];
+  if (venue) parts.push(venue);
+  if (street) parts.push(street);
+  if (city) parts.push(city);
+  if (state) parts.push(state);
+  if (zipCode) parts.push(zipCode);
+  if (country) parts.push(country);
+
+  return parts.join(', ');
+};
+
 export default function QRCodeWithLogo({ url, expiresAt, eventName, host, attendee, eventDescription, eventStartTime, eventId, location }) {
   const qrCodeRef = useRef(null);
   const passDesignRef = useRef(null);
   const [customLogo, setCustomLogo] = useState(null);
   const fileInputRef = useRef(null);
   const [isGeneratingPass, setIsGeneratingPass] = useState(false);
-
-  console.log(location)
+  const [attendeeName, setAttendeeName] = useState('');
 
   const handleDownloadQRCode = () => {
     if (qrCodeRef.current === null) return;
@@ -51,16 +65,33 @@ export default function QRCodeWithLogo({ url, expiresAt, eventName, host, attend
     if (!passDesignRef.current) return;
 
     setIsGeneratingPass(true);
+
     try {
+      const scale = window.devicePixelRatio || 2; // Better for retina screens
+      const desiredWidth = 800;
+      const desiredHeight = 400;
+
       const canvas = await toCanvas(passDesignRef.current, {
         cacheBust: true,
-        canvasWidth: 800,
-        canvasHeight: 1000,
+        canvasWidth: desiredWidth * scale,
+        canvasHeight: desiredHeight * scale,
+        scale: scale, // Render at higher resolution
+        backgroundColor: '#000000', // Optional: black background for dark themes
+        ignoreElements: (element) =>
+          element.classList?.contains('ignore-on-export'), // Optional: skip some UI parts
       });
+
+      // Downscale canvas for crisp output
+      const finalCanvas = document.createElement('canvas');
+      finalCanvas.width = desiredWidth;
+      finalCanvas.height = desiredHeight;
+      const ctx = finalCanvas.getContext('2d');
+
+      ctx?.drawImage(canvas, 0, 0, desiredWidth, desiredHeight);
 
       const link = document.createElement('a');
       link.download = `${eventName.replace(/\s+/g, '-')}-pass.png`;
-      link.href = canvas.toDataURL('image/png');
+      link.href = finalCanvas.toDataURL('image/png');
       link.click();
     } catch (err) {
       console.error('Error generating pass:', err);
@@ -174,21 +205,23 @@ export default function QRCodeWithLogo({ url, expiresAt, eventName, host, attend
         <Dialog>
           <DialogTrigger asChild>
             <button className="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 py-3 px-4 rounded-lg transition duration-200">
-              Download Invitation Pass
+              Issue Invitation Pass
             </button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-4xl">
+          <DialogContent className="sm:max-w-4xl max-w-[95%] overflow-x-auto">
             <DialogHeader>
-              <DialogTitle>Event Pass</DialogTitle>
+              <DialogTitle>Issue an event pass</DialogTitle>
               <DialogDescription>
-                Preview and download your personalized event pass
+                Preview and issue your personalized event pass
               </DialogDescription>
+
             </DialogHeader>
 
-            <div className="p-1">
+            <div className="flex flex-col justify-start items-center gap-4 w-full">
+            <div className="aspect-video w-[800px] h-[400px] flex justify-center items-center" ref={passDesignRef} style={{ width: '800px', height: '400px' }}>
               <div
-                ref={passDesignRef}
-                className="bg-black p-6 rounded-xl shadow-2xl border border-zinc-800 mx-auto relative overflow-hidden aspect-video w-[800px] h-[400px]"
+                className="bg-black p-6 rounded-xl shadow-2xl border border-zinc-800 mx-auto relative overflow-hidden w-full h-full"
+
               >
                 {/* Background elements */}
                 <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-black opacity-95"></div>
@@ -237,7 +270,7 @@ export default function QRCodeWithLogo({ url, expiresAt, eventName, host, attend
                       )}
                     </div>
 
-                    <div className="text-zinc-500 text-xs">
+                    <div className="text-zinc-500 text-xs mt-auto">
                       <p>Valid until {new Date(expiresAt).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',
@@ -253,7 +286,7 @@ export default function QRCodeWithLogo({ url, expiresAt, eventName, host, attend
                       {/* Attendee info with decorative border */}
                       <div className="mb-6 pb-6 border-b border-zinc-800">
                         <p className="text-xs text-zinc-400 uppercase tracking-wider mb-1">Attendee</p>
-                        <p className="text-white text-2xl font-bold tracking-tight">{attendee}</p>
+                        <p className="text-white text-2xl font-bold tracking-tight"> {attendeeName || attendee || "Guest"}</p>
                         <div className="mt-2 h-[2px] w-16 bg-gradient-to-r from-yellow-500 to-yellow-300 rounded-full"></div>
                       </div>
 
@@ -265,57 +298,49 @@ export default function QRCodeWithLogo({ url, expiresAt, eventName, host, attend
                             {formatDate(eventStartTime)}
                           </p>
                         </div>
-                        <div>
-                          <p className="text-xs text-zinc-400 uppercase tracking-wider mb-1">Ticket Type</p>
-                          <p className="text-white text-lg font-medium">VIP Access</p>
-                        </div>
-                        <div>
+                        <div className='col-span-2'>
                           <p className="text-xs text-zinc-400 uppercase tracking-wider mb-1">Location</p>
-                          <p className="text-white text-lg font-medium">Main Hall</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-zinc-400 uppercase tracking-wider mb-1">Seat</p>
-                          <p className="text-white text-lg font-medium">A-12</p>
+                          <p>{formatFullAddress(location)}</p>
                         </div>
                       </div>
                     </div>
 
                     <div className="absolute top-0 right-0">
-                        <div className="bg-white p-2 rounded-lg shadow-lg">
-                          <div className="relative w-[100px] h-[100px]">
-                            <QRCodeSVG
-                              value={url}
-                              size={100}
-                              bgColor="#ffffff"
-                              fgColor="#000000"
-                              level="H"
-                              includeMargin={true}
+                      <div className="bg-white p-2 rounded-lg shadow-lg">
+                        <div className="relative w-[100px] h-[100px]">
+                          <QRCodeSVG
+                            value={url}
+                            size={100}
+                            bgColor="#ffffff"
+                            fgColor="#000000"
+                            level="H"
+                            includeMargin={true}
+                          />
+                          {customLogo ? (
+                            <img
+                              src={customLogo}
+                              alt="Custom Logo"
+                              width={20}
+                              height={20}
+                              className="absolute top-1/2 left-1/2 w-5 h-5 transform -translate-x-1/2 -translate-y-1/2 rounded-md bg-black p-1 object-contain"
                             />
-                            {customLogo ? (
-                              <img
-                                src={customLogo}
-                                alt="Custom Logo"
-                                width={20}
-                                height={20}
-                                className="absolute top-1/2 left-1/2 w-5 h-5 transform -translate-x-1/2 -translate-y-1/2 rounded-md bg-black p-1 object-contain"
-                              />
-                            ) : (
-                              <Image
-                                src={Logo}
-                                alt="Logo"
-                                width={20}
-                                height={20}
-                                placeholder='blur'
-                                className="absolute top-1/2 left-1/2 w-5 h-5 transform -translate-x-1/2 -translate-y-1/2 rounded-md bg-black p-1"
-                              />
-                            )}
-                          </div>
+                          ) : (
+                            <Image
+                              src={Logo}
+                              alt="Logo"
+                              width={20}
+                              height={20}
+                              placeholder='blur'
+                              className="absolute top-1/2 left-1/2 w-5 h-5 transform -translate-x-1/2 -translate-y-1/2 rounded-md bg-black p-1"
+                            />
+                          )}
                         </div>
-                        <div className="absolute inset-0 rounded-lg pointer-events-none" style={{
-                          background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.1) 100%)',
-                          mixBlendMode: 'overlay'
-                        }}></div>
                       </div>
+                      <div className="absolute inset-0 rounded-lg pointer-events-none" style={{
+                        background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.1) 100%)',
+                        mixBlendMode: 'overlay'
+                      }}></div>
+                    </div>
 
                     {/* Bottom section with QR and ID */}
                     <div className="flex justify-end items-end mt-8">
@@ -339,14 +364,28 @@ export default function QRCodeWithLogo({ url, expiresAt, eventName, host, attend
               </div>
             </div>
 
-            <div className="flex justify-center mt-2">
+            <div className="grid grid-cols-[1fr_.2fr] gap-4 items-end justify-end mt-2 w-full">
+              <div className="w-full">
+                <label htmlFor="attendeeName" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                  Your Name (for the pass)
+                </label>
+                <input
+                  id="attendeeName"
+                  type="text"
+                  value={attendeeName}
+                  onChange={(e) => setAttendeeName(e.target.value)}
+                  placeholder="Enter your name"
+                  className="w-full px-4 py-3 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
+                />
+              </div>
               <button
                 onClick={handleDownloadPass}
                 disabled={isGeneratingPass}
-                className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition duration-200 disabled:opacity-50"
+                className="bg-blue-600 hover:bg-blue-700 text-white py-3 cursor-pointer px-6 rounded-lg transition duration-200 disabled:opacity-50"
               >
-                {isGeneratingPass ? 'Generating...' : 'Download Pass'}
+                {isGeneratingPass ? 'Generating...' : 'Download'}
               </button>
+            </div>
             </div>
           </DialogContent>
         </Dialog>

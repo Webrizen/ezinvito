@@ -34,7 +34,7 @@ const eventSchema = new mongoose.Schema({
       country: String
     },
     coordinates: {
-      type: [Number], // [longitude, latitude]
+      type: [Number],
       index: '2dsphere'
     },
     onlineEvent: { type: Boolean, default: false },

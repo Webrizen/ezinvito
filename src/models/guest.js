@@ -1,14 +1,14 @@
 import mongoose from 'mongoose';
 
 const guestSchema = new mongoose.Schema({
-  eventId: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Event', 
-    required: true 
+  eventId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Event',
+    required: true
   },
   name: {
     type: String,
-    required: true 
+    required: true
   },
   phone: {
     type: String,
@@ -23,10 +23,10 @@ const guestSchema = new mongoose.Schema({
     enum: ['pending', 'confirmed', 'rejected'],
     default: 'pending'
   },
-  qrCode: String,  // Just store the QR code string (URL or base64)
-  guests: Number    // Simple +1 count
-}, { 
-  timestamps: true  // createdAt, updatedAt auto-added
+  qrCode: String,
+  guests: Number
+}, {
+  timestamps: true
 });
 
 // Only essential indexes
