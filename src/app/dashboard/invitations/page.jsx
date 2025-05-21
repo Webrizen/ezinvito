@@ -71,7 +71,7 @@ export default async function Page() {
                       <img
                         src={template.image}
                         alt={template.label}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 blur"
                       />
                     </div>
                   )}
@@ -125,7 +125,7 @@ export default async function Page() {
                         {event.qrSettings?.enabled && (
                           <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200">
                             <QrCode className="h-3 w-3" />
-                            QR Code
+                            QR Code Enabled
                           </span>
                         )}
                         

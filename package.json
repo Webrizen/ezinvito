@@ -21,6 +21,8 @@
     "cloudinary": "^2.6.1",
     "clsx": "^2.1.1",
     "crypto": "^1.0.1",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^12.12.1",
     "html-to-image": "^1.11.13",
     "lucide-react": "^0.503.0",
     "mongoose": "^8.14.1",

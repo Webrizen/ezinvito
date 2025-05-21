@@ -2,31 +2,31 @@ export const Templates = [
     {
         id: 'classic',
         label: 'Classic',
-        image: 'https://ezinvito.webrizen.com/templates/classic.png',
+        image: '/templates/classic.png',
     },
     {
         id: 'modern',
         label: 'Modern',
-        image: 'https://ezinvito.webrizen.com/templates/modern.png',
+        image: '/templates/modern.png',
     },
     {
         id: 'elegant',
         label: 'Elegant',
-        image: 'https://ezinvito.webrizen.com/templates/elegant.png',
+        image: '/templates/elegant.png',
     },
     {
         id: 'vintage',
         label: 'Vintage',
-        image: 'https://ezinvito.webrizen.com/templates/vintage.png',
+        image: '/templates/vintage.png',
     },
     {
         id: 'minimal',
         label: 'Minimal',
-        image: 'https://ezinvito.webrizen.com/templates/minimal.png',
+        image: '/templates/minimal.png',
     },
     {
         id: 'party',
         label: 'Party',
-        image: 'https://ezinvito.webrizen.com/templates/party.png',
+        image: '/templates/party.png',
     },
 ]
