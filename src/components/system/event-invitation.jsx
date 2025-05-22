@@ -3,6 +3,25 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import clsx from "clsx";
 import { Templates } from "@/enums/template";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import {
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerDescription,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+} from "@/components/ui/drawer"
+import { useMediaQuery } from "@/hooks/use-media-query"
 
 // Blob SVG
 const Blob = ({ className, style }) => (
@@ -65,6 +84,7 @@ const Fluid = ({ className }) => (
 
 export default function EventInvitation({ event, slug }) {
     const [showCard, setShowCard] = useState(false);
+    const isDesktop = useMediaQuery("(min-width: 768px)")
 
     useEffect(() => {
         const timer = setTimeout(() => setShowCard(true), 3500);
@@ -92,7 +112,7 @@ export default function EventInvitation({ event, slug }) {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 80, scale: 0.95 }}
                         transition={{ duration: 0.7, ease: "easeOut" }}
-                        className="relative z-30 bg-white shadow-2xl rounded-3xl w-full max-w-md mx-auto aspect-[9/16] h-[90vh] flex flex-col p-8 justify-between border border-zinc-100 overflow-hidden"
+                        className="relative z-30 bg-white shadow-2xl rounded-3xl w-full md:max-w-[450px] md:mx-auto mx-4 aspect-[9/16] md:h-[650px] h-[700px] flex flex-col p-8 justify-between border border-zinc-100 overflow-hidden"
                         style={{
                             backgroundImage: `url(${Templates.find(t => t.id === event?.invitationDesign?.templateId || 'classic')?.image})`,
                             backgroundSize: 'cover',
@@ -177,14 +197,247 @@ export default function EventInvitation({ event, slug }) {
                                 </p>
                             </div>
 
-                            <button className="relative px-5 py-2 font-medium text-white group mx-auto bottom-2 cursor-pointer">
-                                <span className="absolute inset-0 w-full h-full transition-all duration-300 ease-out transform translate-x-0 -skew-x-12 bg-blue-500 group-hover:bg-blue-700 group-hover:skew-x-12"></span>
-                                <span className="absolute inset-0 w-full h-full transition-all duration-300 ease-out transform skew-x-12 bg-blue-700 group-hover:bg-blue-500 group-hover:-skew-x-12"></span>
+                            {isDesktop ? (
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <button className="relative px-5 py-2 font-medium text-white group mx-auto bottom-6 cursor-pointer">
+                                            <span className="absolute inset-0 w-full h-full transition-all duration-300 ease-out transform translate-x-0 -skew-x-12 bg-blue-500 group-hover:bg-blue-700 group-hover:skew-x-12"></span>
+                                            <span className="absolute inset-0 w-full h-full transition-all duration-300 ease-out transform skew-x-12 bg-blue-700 group-hover:bg-blue-500 group-hover:-skew-x-12"></span>
+                                            <span className="relative">RSVP Now</span>
+                                        </button>
+                                    </DialogTrigger>
+                                    <DialogContent className="sm:max-w-[425px] bg-white rounded-xl border border-zinc-200 p-0 overflow-hidden">
+                                        <div className="relative">
+                                            {/* Decorative header */}
+                                            <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-blue-500 to-blue-600"></div>
 
-                                <span className="absolute bottom-0 left-0 hidden w-10 h-20 transition-all duration-100 ease-out transform -translate-x-8 translate-y-10 bg-blue-600 -rotate-12"></span>
-                                <span className="absolute bottom-0 right-0 hidden w-10 h-20 transition-all duration-100 ease-out transform translate-x-10 translate-y-8 bg-blue-400 -rotate-12"></span>
-                                <span className="relative">RSVP Now</span>
-                            </button>
+                                            <DialogHeader className="p-6 pb-0">
+                                                <DialogTitle className="text-2xl font-bold text-zinc-800">Join the Event</DialogTitle>
+                                                <DialogDescription className="text-zinc-500">
+                                                    We're excited to have you at {event?.title || 'our event'}!
+                                                </DialogDescription>
+                                            </DialogHeader>
+
+                                            <div className="p-6 pt-4">
+                                                <form className="space-y-4">
+                                                    {/* Name Field */}
+                                                    <div className="space-y-1">
+                                                        <label htmlFor="name" className="block text-sm font-medium text-zinc-700">
+                                                            Full Name <span className="text-red-500">*</span>
+                                                        </label>
+                                                        <div className="relative">
+                                                            <input
+                                                                type="text"
+                                                                id="name"
+                                                                required
+                                                                className="block w-full px-4 py-2.5 text-zinc-700 bg-zinc-50 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                                                                placeholder="John Doe"
+                                                            />
+                                                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                                                <svg className="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                                                </svg>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Email Field */}
+                                                    <div className="space-y-1">
+                                                        <label htmlFor="email" className="block text-sm font-medium text-zinc-700">
+                                                            Email <span className="text-red-500">*</span>
+                                                        </label>
+                                                        <div className="relative">
+                                                            <input
+                                                                type="email"
+                                                                id="email"
+                                                                required
+                                                                className="block w-full px-4 py-2.5 text-zinc-700 bg-zinc-50 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                                                                placeholder="your@email.com"
+                                                            />
+                                                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                                                <svg className="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                                                </svg>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Guests Field */}
+                                                    <div className="space-y-1">
+                                                        <label htmlFor="guests" className="block text-sm font-medium text-zinc-700">
+                                                            Number of Guests
+                                                        </label>
+                                                        <div className="relative">
+                                                            <select
+                                                                id="guests"
+                                                                className="block w-full px-4 py-2.5 text-zinc-700 bg-zinc-50 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none transition-all"
+                                                            >
+                                                                {[0, 1, 2, 3, 4, 5].map(num => (
+                                                                    <option key={num} value={num}>{num} {num === 1 ? 'guest' : 'guests'}</option>
+                                                                ))}
+                                                            </select>
+                                                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                                                <svg className="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a4 4 0 008 0V7m-4-4v4m-4 4h8m4 0h4m-16 0h4m4 0h4m-4 0v4m-4-4v4"></path>
+                                                                </svg>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Dietary Preferences */}
+                                                    <div className="space-y-2">
+                                                        <label className="block text-sm font-medium text-zinc-700">Dietary Preferences</label>
+                                                        <div className="grid grid-cols-2 gap-2">
+                                                            {['Vegetarian', 'Vegan', 'Gluten-Free', 'Nut Allergy'].map(pref => (
+                                                                <div key={pref} className="flex items-center">
+                                                                    <input
+                                                                        id={`diet-${pref.toLowerCase()}`}
+                                                                        type="checkbox"
+                                                                        className="w-4 h-4 text-blue-600 bg-zinc-100 border-zinc-300 rounded focus:ring-blue-500"
+                                                                    />
+                                                                    <label htmlFor={`diet-${pref.toLowerCase()}`} className="ml-2 text-sm text-zinc-700">
+                                                                        {pref}
+                                                                    </label>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Message Field */}
+                                                    <div className="space-y-1">
+                                                        <label htmlFor="message" className="block text-sm font-medium text-zinc-700">
+                                                            Special Requests
+                                                        </label>
+                                                        <textarea
+                                                            id="message"
+                                                            rows={3}
+                                                            className="block w-full px-4 py-2 text-zinc-700 bg-zinc-50 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                                                            placeholder="Any special requirements or notes..."
+                                                        ></textarea>
+                                                    </div>
+
+                                                    {/* Submit Button */}
+                                                    <button
+                                                        type="submit"
+                                                        className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-medium rounded-lg shadow-md transition-all duration-300 transform hover:-translate-y-0.5"
+                                                    >
+                                                        Confirm Attendance
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </DialogContent>
+                                </Dialog>
+                            ) : (
+                                <Drawer>
+                                    <DrawerTrigger asChild>
+                                        <button className="relative px-5 py-2 font-medium text-white group mx-auto bottom-2 cursor-pointer">
+                                            <span className="absolute inset-0 w-full h-full transition-all duration-300 ease-out transform translate-x-0 -skew-x-12 bg-blue-500 group-hover:bg-blue-700 group-hover:skew-x-12"></span>
+                                            <span className="absolute inset-0 w-full h-full transition-all duration-300 ease-out transform skew-x-12 bg-blue-700 group-hover:bg-blue-500 group-hover:-skew-x-12"></span>
+                                            <span className="relative">RSVP Now</span>
+                                        </button>
+                                    </DrawerTrigger>
+                                    <DrawerContent className="max-h-[90vh]">
+                                        <div className="mx-auto w-full max-w-md">
+                                            <DrawerHeader className="text-left px-6 pt-6 pb-0">
+                                                <DrawerTitle className="text-2xl font-bold text-zinc-800">Join the Event</DrawerTitle>
+                                                <DrawerDescription className="text-zinc-500">
+                                                    We're excited to have you at {event?.title || 'our event'}!
+                                                </DrawerDescription>
+                                            </DrawerHeader>
+
+                                            <div className="p-6 pt-4 pb-8 overflow-y-auto">
+                                                <form className="space-y-4">
+                                                    {/* Mobile-optimized form fields (same as desktop but with mobile considerations) */}
+                                                    <div className="space-y-1">
+                                                        <label htmlFor="m-name" className="block text-sm font-medium text-zinc-700">
+                                                            Full Name <span className="text-red-500">*</span>
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            id="m-name"
+                                                            required
+                                                            className="block w-full px-4 py-3 text-zinc-700 bg-zinc-50 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                            placeholder="John Doe"
+                                                        />
+                                                    </div>
+
+                                                    <div className="space-y-1">
+                                                        <label htmlFor="m-email" className="block text-sm font-medium text-zinc-700">
+                                                            Email <span className="text-red-500">*</span>
+                                                        </label>
+                                                        <input
+                                                            type="email"
+                                                            id="m-email"
+                                                            required
+                                                            className="block w-full px-4 py-3 text-zinc-700 bg-zinc-50 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                            placeholder="your@email.com"
+                                                        />
+                                                    </div>
+
+                                                    <div className="space-y-1">
+                                                        <label htmlFor="m-guests" className="block text-sm font-medium text-zinc-700">
+                                                            Number of Guests
+                                                        </label>
+                                                        <select
+                                                            id="m-guests"
+                                                            className="block w-full px-4 py-3 text-zinc-700 bg-zinc-50 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                        >
+                                                            {[0, 1, 2, 3, 4, 5].map(num => (
+                                                                <option key={num} value={num}>{num} {num === 1 ? 'guest' : 'guests'}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+
+                                                    <div className="space-y-2">
+                                                        <label className="block text-sm font-medium text-zinc-700">Dietary Preferences</label>
+                                                        <div className="grid grid-cols-2 gap-2">
+                                                            {['Vegetarian', 'Vegan', 'Gluten-Free', 'Nut Allergy'].map(pref => (
+                                                                <div key={pref} className="flex items-center">
+                                                                    <input
+                                                                        id={`m-diet-${pref.toLowerCase()}`}
+                                                                        type="checkbox"
+                                                                        className="w-4 h-4 text-blue-600 bg-zinc-100 border-zinc-300 rounded focus:ring-blue-500"
+                                                                    />
+                                                                    <label htmlFor={`m-diet-${pref.toLowerCase()}`} className="ml-2 text-sm text-zinc-700">
+                                                                        {pref}
+                                                                    </label>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="space-y-1">
+                                                        <label htmlFor="m-message" className="block text-sm font-medium text-zinc-700">
+                                                            Special Requests
+                                                        </label>
+                                                        <textarea
+                                                            id="m-message"
+                                                            rows={3}
+                                                            className="block w-full px-4 py-2 text-zinc-700 bg-zinc-50 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                            placeholder="Any special requirements or notes..."
+                                                        ></textarea>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+                                            <DrawerFooter className="px-6 pt-0 pb-6">
+                                                <button
+                                                    type="submit"
+                                                    className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-medium rounded-lg shadow-md"
+                                                >
+                                                    Confirm Attendance
+                                                </button>
+                                                <DrawerClose asChild>
+                                                    <button className="mt-2 w-full py-2.5 px-4 text-zinc-700 font-medium rounded-lg border border-zinc-300 hover:bg-zinc-50">
+                                                        Cancel
+                                                    </button>
+                                                </DrawerClose>
+                                            </DrawerFooter>
+                                        </div>
+                                    </DrawerContent>
+                                </Drawer>
+                            )}
                         </div>
 
                         {/* Decorative elements */}
@@ -195,6 +448,8 @@ export default function EventInvitation({ event, slug }) {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+
         </div>
     );
 }
