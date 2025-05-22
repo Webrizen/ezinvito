@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import clsx from "clsx";
+import { Templates } from "@/enums/template";
 
-// Helper: Blob SVG
+// Blob SVG
 const Blob = ({ className, style }) => (
     <svg
         viewBox="0 0 600 600"
@@ -18,7 +19,7 @@ const Blob = ({ className, style }) => (
     </svg>
 );
 
-// Helper: Stripes
+// Stripes
 const Stripes = ({ className }) => (
     <div className={clsx("absolute inset-0 pointer-events-none", className)}>
         {[...Array(20)].map((_, i) => (
@@ -41,7 +42,7 @@ const Stripes = ({ className }) => (
     </div>
 );
 
-// Helper: Fluid waves
+// Fluid waves
 const Fluid = ({ className }) => (
     <motion.div
         initial={{ y: "100%" }}
@@ -72,20 +73,18 @@ export default function EventInvitation({ event, slug }) {
 
     return (
         <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-blue-200 dark:from-zinc-900 dark:via-zinc-950 dark:to-zinc-900 overflow-hidden transition-colors duration-500">
-            {/* Blob */}
             <motion.div
                 initial={{ scale: 0, rotate: 0, opacity: 0 }}
-                animate={{ scale: 1.2, rotate: 20, opacity: 1 }}
+                animate={{ scale: 1.2, rotate: 20, opacity: 0.8 }}
                 transition={{ duration: 1.2, ease: "easeOut" }}
-                className="absolute -top-32 -left-32 w-[600px] h-[600px] text-blue-300 dark:text-zinc-800 z-10"
+                className="absolute -top-32 -left-32 w-[600px] h-[600px] text-blue-300/50 dark:text-zinc-800/50 z-10"
             >
-                <Blob className="blur-[90px]" />
+                <Blob className="blur-[120px]" />
             </motion.div>
 
-            <Stripes className="blur-md" />
-            <Fluid className="blur-[90px]" />
+            <Stripes className="blur-lg opacity-30" />
+            <Fluid className="blur-[100px] opacity-60" />
 
-            {/* Card */}
             <AnimatePresence>
                 {showCard && (
                     <motion.div
@@ -93,32 +92,106 @@ export default function EventInvitation({ event, slug }) {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 80, scale: 0.95 }}
                         transition={{ duration: 0.7, ease: "easeOut" }}
-                        className="relative z-30 bg-white/90 dark:bg-zinc-800/90 shadow-2xl rounded-3xl p-8 w-full max-w-md mx-auto flex flex-col items-center aspect-[9/16] h-[80vh]"
+                        className="relative z-30 bg-white shadow-2xl rounded-3xl w-full max-w-md mx-auto aspect-[9/16] h-[90vh] flex flex-col p-8 justify-between border border-zinc-100 overflow-hidden"
+                        style={{
+                            backgroundImage: `url(${Templates.find(t => t.id === event?.invitationDesign?.templateId || 'classic')?.image})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center'
+                        }}
                     >
-                        <h1 className="text-3xl font-bold mb-2 text-blue-700 dark:text-zinc-100">
-                            {event?.title || "You're Invited!"}
-                        </h1>
-                        <p className="text-zinc-600 dark:text-zinc-300 mb-4 text-center">
-                            {event?.description || "Join us for a special event."}
-                        </p>
-                        <div className="mb-4 text-blue-500 dark:text-zinc-400 font-semibold">
-                            {event?.date && (
-                                <span>
-                                    {new Date(event.date).toLocaleString(undefined, {
-                                        dateStyle: "long",
-                                        timeStyle: "short",
-                                    })}
-                                </span>
-                            )}
+                        {/* Content container */}
+                        <div className="relative z-10 h-full flex flex-col rounded-2xl backdrop-blur-[2px] p-6"
+                            style={{
+                                background: 'radial-gradient(circle at center, rgba(255,255,255,0.9) 0%, rgba(225,225,225,0.1) 100%)'
+                            }}
+                        >
+                            {/* Header */}
+                            <div className="text-center mb-6">
+                                <div className="inline-block px-4 py-1 mb-4 text-xs font-medium tracking-widest text-blue-600 uppercase bg-blue-50 rounded-full">
+                                    {event?.eventType || 'Workshop'}
+                                </div>
+                                <h1 className="text-3xl font-bold text-zinc-800 mb-2">
+                                    {event?.title || 'Tech Innovators Meetup'}
+                                </h1>
+                                <div className="flex justify-center">
+                                    <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
+                                </div>
+                            </div>
+
+                            {/* Main content */}
+                            <div className="flex-1 flex flex-col justify-center space-y-6">
+                                {/* Date & Time */}
+                                <div className="text-center">
+                                    <svg className="w-6 h-6 mx-auto mb-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <p className="text-xs uppercase tracking-wider text-blue-500 mb-1">
+                                        When
+                                    </p>
+                                    <p className="font-medium text-zinc-700">
+                                        {event?.date ? new Date(event.date).toLocaleString(undefined, {
+                                            weekday: 'long',
+                                            month: 'long',
+                                            day: 'numeric',
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        }) : "Saturday, May 25, 2025 at 3:11 PM"}
+                                    </p>
+                                </div>
+
+                                {/* Location */}
+                                <div className="text-center">
+                                    <svg className="w-6 h-6 mx-auto mb-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    <p className="text-xs uppercase tracking-wider text-blue-500 mb-1">
+                                        Where
+                                    </p>
+                                    <p className="font-medium text-zinc-700">
+                                        {event?.location?.venue || "The Innovation Hub"}
+                                    </p>
+                                    <p className="text-sm text-zinc-500">
+                                        {event?.location?.address?.city}, {event?.location?.address?.state}
+                                    </p>
+                                </div>
+
+                                {/* Host */}
+                                <div className="text-center">
+                                    <svg className="w-6 h-6 mx-auto mb-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    <p className="text-xs uppercase tracking-wider text-blue-500 mb-1">
+                                        Hosted by
+                                    </p>
+                                    <p className="font-medium text-zinc-700">
+                                        {event?.host || "Alex"}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Description */}
+                            <div className="mt-6 mb-8 text-center">
+                                <p className="text-sm italic text-zinc-600 px-4">
+                                    {event?.description || "Join us for an exciting meetup where tech enthusiasts gather to discuss the latest innovations in AI, blockchain, and more."}
+                                </p>
+                            </div>
+
+                            <button className="relative px-5 py-2 font-medium text-white group mx-auto bottom-2 cursor-pointer">
+                                <span className="absolute inset-0 w-full h-full transition-all duration-300 ease-out transform translate-x-0 -skew-x-12 bg-blue-500 group-hover:bg-blue-700 group-hover:skew-x-12"></span>
+                                <span className="absolute inset-0 w-full h-full transition-all duration-300 ease-out transform skew-x-12 bg-blue-700 group-hover:bg-blue-500 group-hover:-skew-x-12"></span>
+
+                                <span className="absolute bottom-0 left-0 hidden w-10 h-20 transition-all duration-100 ease-out transform -translate-x-8 translate-y-10 bg-blue-600 -rotate-12"></span>
+                                <span className="absolute bottom-0 right-0 hidden w-10 h-20 transition-all duration-100 ease-out transform translate-x-10 translate-y-8 bg-blue-400 -rotate-12"></span>
+                                <span className="relative">RSVP Now</span>
+                            </button>
                         </div>
-                        {slug && (
-                            <a
-                                href={`/events/${slug}`}
-                                className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-full shadow hover:bg-blue-700 transition dark:bg-zinc-700 dark:hover:bg-zinc-600"
-                            >
-                                View Event
-                            </a>
-                        )}
+
+                        {/* Decorative elements */}
+                        <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-blue-200 rounded-tl-lg"></div>
+                        <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-blue-200 rounded-tr-lg"></div>
+                        <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-blue-200 rounded-bl-lg"></div>
+                        <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-blue-200 rounded-br-lg"></div>
                     </motion.div>
                 )}
             </AnimatePresence>
