@@ -1,22 +1,38 @@
 import mongoose from 'mongoose';
 
-const rsvpResponseSchema = new mongoose.Schema({
-  guestId: { type: mongoose.Schema.Types.ObjectId, ref: 'Guest', required: true },
-  eventId: { type: mongoose.Schema.Types.ObjectId, ref: 'Event', required: true },
-  response: { 
-    type: String, 
-    enum: ['attending', 'not_attending', 'maybe'], 
+const rsvpSchema = new mongoose.Schema({
+  eventId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Event', 
     required: true 
   },
-  message: String,
-  plusOnesAttending: Number,
-  dietaryRestrictions: [String],
-  customAnswers: mongoose.Schema.Types.Mixed,
-  ipAddress: String,
-  userAgent: String,
+  
+  // Core attendee info (required)
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  
+  // Attendance status (your requested 3 options)
+  attendanceStatus: {
+    type: String,
+    enum: ['going', 'not-sure', 'not-going'],
+    default: 'going',
+    required: true
+  },
+  
+  // Phone optional
+  phone: String,
+  
+  // Guests with relationships (simplified array)
+  guests: [{
+    name: String,
+    relationship: String // 'child', 'spouse', 'partner', 'friend', etc.
+  }],
+  
   respondedAt: { type: Date, default: Date.now }
-});
+}, { timestamps: true });
 
-rsvpResponseSchema.index({ guestId: 1, eventId: 1 }, { unique: true });
+// Indexes for performance
+rsvpSchema.index({ eventId: 1 });
+rsvpSchema.index({ email: 1, eventId: 1 }, { unique: true }); 
 
-export default mongoose.models.RSVPResponse || mongoose.model('RSVPResponse', rsvpResponseSchema);
+export default mongoose.models.Rsvp || mongoose.model('Rsvp', rsvpSchema);
