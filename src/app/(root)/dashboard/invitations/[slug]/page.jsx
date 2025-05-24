@@ -1,14 +1,7 @@
 import React from 'react';
 import { auth } from '@clerk/nextjs/server';
 import QRCodeWithLogo from '@/components/system/qr-code-with-logo';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Eye, FolderIcon, PencilIcon, TrashIcon, UsersRoundIcon } from 'lucide-react';
-import Link from 'next/link';
+import EventQuickActions from '@/components/system/event-quick-actions';
 
 export default async function Page({ params }) {
   const { slug } = await params;
@@ -171,66 +164,7 @@ export default async function Page({ params }) {
               </div>
 
               {/* Quick Actions */}
-              <div className="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl p-6 shadow-sm transition-colors duration-300">
-                <h3 className="text-lg font-semibold text-zinc-800 dark:text-white mb-4">Quick Actions</h3>
-                <div className="grid grid-cols-5 gap-4">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button className="w-full flex items-center justify-center cursor-pointer p-3 bg-zinc-50 dark:bg-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-600 rounded-lg transition duration-200">
-                          <PencilIcon className="size-4 text-zinc-400" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Edit Event Details</p>
-                      </TooltipContent>
-                    </Tooltip>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Link href={`/event/${slug || "not-found"}`} target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-center cursor-pointer p-3 bg-zinc-50 dark:bg-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-600 rounded-lg transition duration-200">
-                          <Eye className="size-4 text-zinc-400" />
-                        </Link>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>View Event Details</p>
-                      </TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button className="w-full flex items-center justify-center cursor-pointer p-3 bg-zinc-50 dark:bg-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-600 rounded-lg transition duration-200">
-                          <UsersRoundIcon className="size-4 text-zinc-400" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Manage Participants</p>
-                      </TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button className="w-full flex items-center justify-center cursor-pointer p-3 bg-zinc-50 dark:bg-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-600 rounded-lg transition duration-200">
-                          <FolderIcon className="size-4 text-zinc-400" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Customize Invitation</p>
-                      </TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button className="w-full flex items-center justify-center cursor-pointer p-3 bg-red-50 hover:bg-red-100 dark:bg-red-900/30 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 rounded-lg transition duration-200">
-                          <TrashIcon className="size-4 text-red-400" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Delete Event</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-              </div>
+             <EventQuickActions slug={slug} eventId={event._id} />
             </div>
           </div>
         </div>

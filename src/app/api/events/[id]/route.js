@@ -63,6 +63,11 @@ export async function PATCH(request, { params }) {
 
 export async function DELETE(request, { params }) {
   await connectDB();
+  const { id } = await params;
+
+  if (!id) {
+    return NextResponse.json({ error: "Event ID is required" }, { status: 400 });
+  }
   const { userId } = getAuth(request);
   
   if (!userId) {
@@ -71,8 +76,8 @@ export async function DELETE(request, { params }) {
 
   try {
     const deletedEvent = await Event.findOneAndDelete({
-      _id: params.id,
-      host: userId
+      _id: id,
+      userId: userId
     });
     
     if (!deletedEvent) {

@@ -71,7 +71,7 @@ export default async function Page() {
                       <img
                         src={template.image}
                         alt={template.label}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 blur"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 blur-[2px]"
                       />
                     </div>
                   )}
