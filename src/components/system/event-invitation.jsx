@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/drawer";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 // Blob SVG Background
 const Blob = ({ className, style }) => (
@@ -90,6 +91,7 @@ export default function EventInvitation({ event, slug }) {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
+    const router = useRouter();
 
     useEffect(() => {
         const timer = setTimeout(() => setShowCard(true), 3000);
@@ -132,7 +134,8 @@ export default function EventInvitation({ event, slug }) {
             const result = await response.json();
             if (!response.ok) throw new Error(result.error || "Something went wrong");
 
-            toast.success("RSVP submitted successfully!");
+            toast.success("RSVP submitted successfully! generating passes, please wait...");
+            router.push(`/event/${slug}/passes?rsvpId=${result.rsvp._id}`);
         } catch (err) {
             setError(err.message);
             toast.error("Submission failed", { description: err.message });
@@ -607,7 +610,7 @@ const InputField = ({
             onChange={onChange}
             placeholder={placeholder}
             required={required}
-            className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+            className="w-full px-4 py-2 border border-zinc-300 dark:text-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
         />
     </div>
 );
@@ -619,10 +622,10 @@ const SelectField = ({ label, name, value, onChange, options }) => (
             name={name}
             value={value}
             onChange={onChange}
-            className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+            className="w-full px-4 py-2 border border-zinc-300 text-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
         >
             {options.map((opt) => (
-                <option key={opt.value} value={opt.value}>
+                <option key={opt.value} value={opt.value} className="text-zinc-800">
                     {opt.label}
                 </option>
             ))}

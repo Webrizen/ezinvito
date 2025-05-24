@@ -39,7 +39,7 @@ export default async function Page({ params }) {
     return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
-  const qrCodeUrl = `https://ezinvito.webrizen.com/event/${event.customSlug}?key=${event.qrSettings.secretKey}`;
+  const qrCodeUrl = `https://ezinvito.webrizen.com/event/${event.customSlug}/verify?key=${event.qrSettings.secretKey}`;
 
   return (
     <>

@@ -1,11 +1,9 @@
 import React from 'react';
-import { auth } from '@clerk/nextjs/server';
 import EventInvitation from '@/components/system/event-invitation';
 
 export default async function page({ params }) {
   const { slug } = await params;
-  const { userId } = await auth();
-  const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/events/slug/${slug}?userId=${userId}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/events/slug?slug=${slug}`, {
     method: 'GET',
     cache: 'no-store',
   });
