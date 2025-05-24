@@ -116,13 +116,51 @@
   * {
     @apply border-border outline-none;
   }
+
   body {
     @apply bg-background text-foreground;
   }
-   .input {
-    @apply w-full border py-6 px-8 border-zinc-300  bg-transparent text-sm text-zinc-900 placeholder-zinc-500 focus:outline-none focus:ring-0 focus:border-zinc-900;
+
+  .input {
+    @apply w-full border py-6 px-8 border-zinc-300 bg-transparent text-sm text-zinc-900 placeholder-zinc-500 focus:outline-none focus:ring-0 focus:border-zinc-900;
   }
-  .bg-card-invite{
+
+  .bg-card-invite {
     background: radial-gradient(ellipse at center, #ffffff, #ffffff, transparent);
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+
+  .animated-gradient-text {
+    font-size: 2.5rem;
+    font-weight: bold;
+    background: linear-gradient(to right,
+        #000000 20%,
+        #333333 40%,
+        #333333 60%,
+        #000000 80%);
+    background-size: 200% auto;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    animation: shimmer 3s linear infinite;
+    line-height: 1.2;
+  }
+
+  .dark .animated-gradient-text {
+    background: linear-gradient(to right,
+        #d4d4d8 20%,
+        #71717a 40%,
+        #71717a 60%,
+        #d4d4d8 80%);
+    background-size: 200% auto;
   }
 }
