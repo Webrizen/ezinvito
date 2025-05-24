@@ -34,7 +34,7 @@ export async function GET(request) {
         }
 
         return NextResponse.json(
-            { message: 'RSVP details retrieved', rsvp },
+            { message: 'RSVP details retrieved', rsvp, event },
             { status: 200 }
         );
 
