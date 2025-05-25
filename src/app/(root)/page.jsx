@@ -313,7 +313,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="w-full py-20 bg-zinc-50 dark:bg-zinc-900">
+      <section className="w-full py-20 bg-zinc-100 dark:bg-zinc-950">
         <div className="container mx-auto px-5">
           <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center bg-gradient-to-r dark:from-white from-zinc-900 dark:to-zinc-400 to-zinc-600 bg-clip-text text-transparent">
             Frequently Asked Questions

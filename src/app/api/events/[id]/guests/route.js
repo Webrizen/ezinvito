@@ -81,12 +81,10 @@ export async function GET(request, { params }) {
   await connectDB();
 
   const { id } = await params;
-  const url = new URL(request.url);
-  const guestId = url.searchParams.get('guestId');
 
   try {
-    // 1. Validate the event exists
-    const event = await Event.findById(id);
+    // 1. Validate the event exists and get event data
+    const event = await Event.findById(id).select('-__v');
     if (!event) {
       return NextResponse.json(
         { error: 'Event not found' },
@@ -94,33 +92,38 @@ export async function GET(request, { params }) {
       );
     }
 
-    // 2. Get the specific RSVP
-    const rsvp = await Rsvp.findOne({
-      _id: guestId,
+    // 2. Get all RSVPs for this event
+    const rsvps = await Rsvp.find({
       eventId: id
     }).select('-__v');
 
-    if (!rsvp) {
+    if (!rsvps || rsvps.length === 0) {
       return NextResponse.json(
-        { error: 'Guest not found for this event' },
-        { status: 404 }
+        { 
+          success: true,
+          message: 'No RSVPs found for this event',
+          event: event,
+          rsvps: []
+        },
+        { status: 200 }
       );
     }
 
-    // 3. Return the guest information
+    // 3. Return both event and RSVP information
     return NextResponse.json(
       {
         success: true,
-        guest: rsvp
+        event: event,
+        rsvps: rsvps
       },
       { status: 200 }
     );
 
   } catch (error) {
-    console.error('Error fetching guest:', error);
+    console.error('Error fetching event and RSVPs:', error);
     return NextResponse.json(
       {
-        error: 'An error occurred while fetching guest information',
+        error: 'An error occurred while fetching event information',
         details: process.env.NODE_ENV === 'development' ? error.message : undefined
       },
       { status: 500 }
