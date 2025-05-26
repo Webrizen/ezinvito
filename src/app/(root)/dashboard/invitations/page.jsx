@@ -5,7 +5,7 @@ import { Templates } from '@/enums/template';
 import { CalendarDays, UserRound, QrCode, Globe, Lock, Unlock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export default async function Page() {
+export default async function page() {
   const { userId } = await auth();
 
   const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/events?userId=${userId}`, {

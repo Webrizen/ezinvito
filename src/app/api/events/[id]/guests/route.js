@@ -99,7 +99,7 @@ export async function GET(request, { params }) {
 
     if (!rsvps || rsvps.length === 0) {
       return NextResponse.json(
-        { 
+        {
           success: true,
           message: 'No RSVPs found for this event',
           event: event,
