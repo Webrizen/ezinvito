@@ -72,7 +72,7 @@ const Sidebar = ({ children }) => {
             </li>
             <li className={`relative ${isActive('/dashboard/qr') ? 'before:absolute before:-left-4 before:w-1.5 before:h-4/5 before:rounded-r-md before:top-1/2 before:-translate-y-1/2 before:bg-blue-600' : ''}`}>
               <Link 
-                href="/dashboard/qr" 
+                href="/dashboard/qr-verification" 
                 className={`flex items-center px-4 py-2.5 gap-x-3 rounded-md ${isActive('/dashboard/qr') ? 'text-blue-600 bg-zinc-50 dark:bg-zinc-900/80' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800/50'}`}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
