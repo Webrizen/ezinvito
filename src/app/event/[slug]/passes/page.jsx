@@ -29,7 +29,7 @@ export default async function page({ params, searchParams }) {
     return (
         <div className="w-full min-h-screen flex justify-center items-center">
             <InvitationPassContainer
-                url={`https://ezinvito.webrizen.com/event/${slug}/verify?key=${data?.event?.qrSettings?.secretKey}`}
+                url={`https://ezinvito.webrizen.com/event/${slug}/verify?key=${data?.event?.qrSettings?.secretKey}&rsvpId=${rsvpId}`}
                 expiresAt={data.event.qrSettings.expiresAt}
                 eventName={data.event.title}
                 host={data.event.host}

@@ -17,7 +17,6 @@ export default async function page() {
   });
 
   const events = await response.json();
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between mb-10">
@@ -48,10 +47,7 @@ export default async function page() {
                 <h3 className="text-lg font-semibold mb-2 text-center">{event.title}</h3>
                 <div className="relative">
                   <QRCodeSVG
-                    value={JSON.stringify({
-                      eventId: event._id,
-                      secret: event.qrSettings.secretKey
-                    })}
+                    value={`https://ezinvito.webrizen.com/event/${event.customSlug}/verify?key=${event.qrSettings.secretKey}`}
                     size={200}
                     level="H"
                     includeMargin={false}
