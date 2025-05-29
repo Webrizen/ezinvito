@@ -1,8 +1,6 @@
-import { AuroraBackground } from "@/components/ui/aurora-background";
-import { Spotlight } from "@/components/ui/spotlight";
 import Link from "next/link";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
-import { QrCode, Ticket, Scan, CalendarCheck, Users, Sparkles, ArrowRight, MapPin, BadgeCheck } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { eventItems } from "@/enums/static-data";
 import { cn } from "@/lib/utils";
 import GridDistortion from "@/components/ui/grid-distortion";
@@ -10,35 +8,60 @@ import GridDistortion from "@/components/ui/grid-distortion";
 export default function Home() {
   return (
     <>
-      <section className="w-full min-h-screen md:p-10 p-5 relative bg-[url(/hero-bg.png)] bg-cover bg-center bg-no-repeat">
-        <div className="container mx-auto w-full h-full rounded-xl">
+      <section className="w-full min-h-screen md:p-10 p-5 flex justify-center items-center relative overflow-hidden bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-900 dark:to-zinc-950">
+        <div className="absolute inset-0 w-full h-full z-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+          >
+            <source src="/hero-bg.mp4" type="video/mp4" />
+            <img src="/hero-bg.png" alt="Background fallback" className="w-full h-full object-cover" />
+          </video>
+          <div className="absolute inset-0 bg-black/30 dark:bg-black/50"></div>
+        </div>
+        <div className="container mx-auto w-full h-full rounded-xl relative z-10">
           <div className="w-full space-y-6 py-24 px-4 md:text-center text-left flex flex-col items-center justify-center h-full">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight md:max-w-5xl bg-gradient-to-bl from-zinc-50 to-zinc-200 bg-clip-text text-transparent">
-              Create stunning digital invitations for any occasion with AI.
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight md:max-w-6xl bg-gradient-to-bl from-zinc-50 to-zinc-200 bg-clip-text text-transparent">
+              The Complete Event Invitation Management Platform Powered by AI
             </h1>
 
-            <p className="text-md md:text-xl text-zinc-400 max-w-4xl">
-              Create stunning, customizable invitations for any occasion in
-              minutes. Share digitally or print - the choice is yours, and it's
-              all powered by AI.
+            <p className="text-md md:text-xl text-zinc-200 max-w-4xl">
+              From stunning AI-designed invitations to seamless guest management -
+              create, track, and execute unforgettable events with our all-in-one platform.
+              QR check-ins, real-time RSVPs, and smart analytics included.
             </p>
 
-            <div className="flex flex-row md:justify-center md:items-center justify-left items-start gap-4 pt-4 w-full">
+            <div className="flex md:flex-row flex-col md:justify-center md:items-center justify-left items-start gap-4 pt-4 w-full">
               <Link
                 href="/auth/sign-up"
                 className="bg-white text-zinc-600 hover:bg-zinc-100 md:px-8 md:py-3 px-6 py-3 rounded-full font-semibold md:text-lg text-sm transition-all shadow-[20px_30px_69px_-39px_rgba(0,_0,_0,_0.3)]"
               >
-                Create Invitation
+                Start Your Event - Free
               </Link>
               <Link
                 href="/showcase"
-                className="border-2 border-zinc-400 text-zinc-600 hover:bg-zinc-50 hover:text-zinc-700 md:px-8 md:py-3 px-6 py-3 rounded-full font-semibold md:text-lg text-sm transition-all"
+                className="border-2 border-zinc-400 text-zinc-300 hover:bg-zinc-50 hover:text-zinc-700 md:px-8 md:py-3 px-6 py-3 rounded-full font-semibold md:text-lg text-sm transition-all"
               >
-                See Examples
+                See Platform in Action
               </Link>
             </div>
-
-            <div className="flex md:items-center md:justify-center w-full md:flex-row flex-col gap-2 pt-4 text-zinc-600">
+            <div className="md:grid hidden grid-cols-1 md:grid-cols-4 gap-4 pt-8 w-full max-w-4xl">
+              {[
+                { icon: '✨', text: 'AI-Powered Invitations' },
+                { icon: '📲', text: 'Digital RSVP Tracking' },
+                { icon: '🔐', text: 'QR Code Check-In' },
+                { icon: '📊', text: 'Real-Time Analytics' }
+              ].map((feature, index) => (
+                <div key={index} className="flex items-center gap-2 bg-white/5 backdrop-blur-sm px-3 py-2 text-center rounded-full border border-white/10">
+                  <span className="text-xl">{feature.icon}</span>
+                  <span className="text-sm text-zinc-200">{feature.text}</span>
+                </div>
+              ))}
+            </div>
+            <div className="flex md:items-center md:justify-center w-full md:flex-row flex-col gap-2 pt-4 text-zinc-200">
               <div className="flex -space-x-2">
                 {[1, 2, 3, 4].map((item) => (
                   <img
@@ -69,14 +92,14 @@ export default function Home() {
             </div>
           </div>
         </div>
+        <div className="absolute bottom-0 left-0 w-full h-1/5 bg-gradient-to-t from-zinc-50 dark:from-zinc-900 via-zinc-50/90 dark:via-zinc-900/90 to-transparent z-20"></div>
       </section>
 
-      <section className="w-full py-20 bg-zinc-50 dark:bg-zinc-900 relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-1/2 -left-1/4 w-[800px] h-[800px] bg-purple-500/20 rounded-full filter blur-3xl opacity-30 dark:opacity-20"></div>
+      <section className="w-full pb-20 pt-0 bg-zinc-50 dark:bg-zinc-900 relative overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden bottom-0 right-0">
+          <div className="absolute -bottom-1/2 -left-1/4 w-[500px] h-[500px] bg-purple-500/20 rounded-full filter blur-3xl opacity-30 dark:opacity-20"></div>
           <div className="absolute -bottom-1/4 -right-1/4 w-[600px] h-[600px] bg-blue-500/20 rounded-full filter blur-3xl opacity-30 dark:opacity-20"></div>
         </div>
-
         <div className="max-w-7xl mx-auto px-5 relative z-10">
           <h2 className="text-3xl md:text-4xl font-bold mb-2 text-center bg-gradient-to-r dark:from-white from-zinc-900 dark:to-zinc-400 to-zinc-600 bg-clip-text text-transparent">
             Powerful Event Management Features

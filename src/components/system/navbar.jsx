@@ -38,7 +38,7 @@ const Navbar = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -63,11 +63,10 @@ const Navbar = () => {
   ];
 
   return (
-    <header className={`p-2 fixed top-0 z-50 w-full transition-all duration-300 ${
-      isScrolled 
-        ? "dark:bg-zinc-900 bg-zinc-50 backdrop-blur-3xl" 
+    <header className={`p-2 fixed top-0 z-50 w-full transition-all duration-300 ${isScrolled
+        ? "dark:bg-zinc-900 bg-zinc-50 backdrop-blur-3xl"
         : "bg-transparent backdrop-blur-none"
-    }`}>
+      }`}>
       <div className="md:container mx-auto flex justify-between items-center md:px-20">
         <Link
           href="/"
@@ -104,10 +103,10 @@ const Navbar = () => {
                           href="/"
                         >
                           <div className="mb-2 mt-4 text-lg font-medium">
-                          Why ezinvito?
+                            Why ezinvito?
                           </div>
                           <p className="text-sm leading-tight text-muted-foreground">
-                          Seamless event setup. Stunning invites. Real-time guest engagement.
+                            Seamless event setup. Stunning invites. Real-time guest engagement.
                           </p>
                         </Link>
                       </NavigationMenuLink>
@@ -205,7 +204,7 @@ const Navbar = () => {
                   Navigate Revive Edge. Break limits. Never give up.
                 </SheetDescription>
               </SheetHeader>
-              <nav className="mt-4 flex flex-col space-y-3">
+              <nav className="flex flex-col space-y-3 p-2">
                 {links.map((link) => (
                   <Link
                     key={link.href}
@@ -220,24 +219,24 @@ const Navbar = () => {
                     </p>
                   </Link>
                 ))}
-                <Link
-                  href="/pricing"
-                  className="p-3 rounded-md hover:bg-zinc-100 dark:hover:bg-[rgba(225,225,225,0.1)]"
-                >
-                  Pricing
-                </Link>
-                <Link
-                  href="/about"
-                  className="p-3 rounded-md hover:bg-zinc-100 dark:hover:bg-[rgba(225,225,225,0.1)]"
-                >
-                  About
-                </Link>
-                <Link
-                  href="/contact"
-                  className="p-3 rounded-md hover:bg-zinc-100 dark:hover:bg-[rgba(225,225,225,0.1)]"
-                >
-                  Contact
-                </Link>
+                {[
+                  { href: "/pricing", title: "Pricing", description: "Affordable plans for every event invitation sent to your guests." },
+                  { href: "/about", title: "About", description: "Learn more about us, our mission, and values and more." },
+                  { href: "/contact", title: "Contact", description: "Get in touch with us, just say HI and we will reach out to you." }
+                ].map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="block space-y-1 rounded-md p-3 transition-colors hover:bg-zinc-100 dark:hover:bg-[rgba(225,225,225,0.1)]"
+                  >
+                    <div className="text-sm font-medium leading-none">
+                      {link.title}
+                    </div>
+                    <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                      {link.description}
+                    </p>
+                  </Link>
+                ))}
               </nav>
             </SheetContent>
           </Sheet>
