@@ -150,7 +150,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="w-full py-20 bg-zinc-100 dark:bg-zinc-950">
+      <section className="w-full py-20 bg-zinc-100 dark:bg-zinc-950 relative overflow-hidden">
+
+        <div className="absolute inset-0 overflow-hidden bottom-0 right-0 left-0 top-0 m-auto bg-gradient-to-br dark:from-purple-600 from-purple-50 to-transparent w-[500px] h-[500px] blur-[900px]" />
+
+
         <div className="container mx-auto px-5">
           <h2 className="text-3xl md:text-4xl font-bold mb-2 text-center bg-gradient-to-r dark:from-white from-zinc-900 dark:to-zinc-400 to-zinc-600 bg-clip-text text-transparent">
             Explore Our Event Management Solutions.
