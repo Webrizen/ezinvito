@@ -1,8 +1,6 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { MoonIcon, SunIcon } from "lucide-react";
-import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import {
@@ -26,8 +24,25 @@ import { UserButton, useAuth } from "@clerk/nextjs";
 import { ThemeToggleButton } from "@/components/ui/theme-toggle-button";
 
 const Navbar = () => {
-  const { setTheme, theme } = useTheme();
   const { isSignedIn } = useAuth();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Check if user has scrolled past 100vh
+      if (window.scrollY > window.innerHeight) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const links = [
     {
@@ -48,7 +63,11 @@ const Navbar = () => {
   ];
 
   return (
-    <header className="p-2 dark:bg-zinc-900 bg-zinc-50 backdrop-blur-3xl sticky top-0 z-50">
+    <header className={`p-2 fixed top-0 z-50 w-full transition-all duration-300 ${
+      isScrolled 
+        ? "dark:bg-zinc-900 bg-zinc-50 backdrop-blur-3xl" 
+        : "bg-transparent backdrop-blur-none"
+    }`}>
       <div className="md:container mx-auto flex justify-between items-center md:px-20">
         <Link
           href="/"
