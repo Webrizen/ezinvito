@@ -67,7 +67,7 @@ const Navbar = () => {
         ? "dark:bg-zinc-900 bg-zinc-50 backdrop-blur-3xl"
         : "bg-transparent backdrop-blur-none"
       }`}>
-      <div className="md:container mx-auto flex justify-between items-center md:px-20">
+      <div className="md:container mx-auto flex justify-between items-center md:px-5">
         <Link
           href="/"
           className="h-10 w-auto flex gap-2 items-center p-1 rounded-md hover:bg-[rgba(225,225,225,0.05)] mr-3"
