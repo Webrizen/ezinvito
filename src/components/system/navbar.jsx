@@ -64,8 +64,8 @@ const Navbar = () => {
 
   return (
     <header className={`p-2 fixed top-0 z-50 w-full transition-all duration-300 ${isScrolled
-        ? "dark:bg-zinc-900 bg-zinc-50 backdrop-blur-3xl"
-        : "bg-transparent backdrop-blur-none"
+      ? "dark:bg-zinc-900 bg-zinc-50 backdrop-blur-3xl"
+      : "bg-transparent backdrop-blur-none"
       }`}>
       <div className="md:container mx-auto flex justify-between items-center md:px-5">
         <Link
@@ -90,47 +90,13 @@ const Navbar = () => {
             Home
           </Link>
 
-          <NavigationMenu>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>Explore</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid gap-3 p-2 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                    <li className="row-span-3">
-                      <NavigationMenuLink asChild>
-                        <Link
-                          className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-zinc-100/50 to-transparent p-4 no-underline outline-none focus:shadow-md"
-                          href="/"
-                        >
-                          <div className="mb-2 mt-4 text-lg font-medium">
-                            Why ezinvito?
-                          </div>
-                          <p className="text-sm leading-tight text-muted-foreground">
-                            Seamless event setup. Stunning invites. Real-time guest engagement.
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                    {links.map((link) => (
-                      <NavigationMenuLink asChild key={link.href}>
-                        <Link
-                          href={link.href}
-                          className="block space-y-1 rounded-md p-3 transition-colors hover:bg-zinc-100 dark:hover:bg-[rgba(225,225,225,0.1)]"
-                        >
-                          <div className="text-sm font-medium leading-none">
-                            {link.title}
-                          </div>
-                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {link.description}
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
+<Link
+            href="/#features"
+            className="lg:inline-flex lg:w-auto px-3 py-2 rounded text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-[rgba(225,225,225,0.1)]"
+          >
+            Features
+          </Link>
+          
 
           <Link
             href="/pricing"
@@ -205,21 +171,8 @@ const Navbar = () => {
                 </SheetDescription>
               </SheetHeader>
               <nav className="flex flex-col space-y-3 p-2">
-                {links.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="block space-y-1 rounded-md p-3 transition-colors hover:bg-zinc-100 dark:hover:bg-[rgba(225,225,225,0.1)]"
-                  >
-                    <div className="text-sm font-medium leading-none">
-                      {link.title}
-                    </div>
-                    <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                      {link.description}
-                    </p>
-                  </Link>
-                ))}
                 {[
+                  { href: "/#features", title: "Features", description: "get to know why this platform exist and how better it is..." },
                   { href: "/pricing", title: "Pricing", description: "Affordable plans for every event invitation sent to your guests." },
                   { href: "/about", title: "About", description: "Learn more about us, our mission, and values and more." },
                   { href: "/contact", title: "Contact", description: "Get in touch with us, just say HI and we will reach out to you." }

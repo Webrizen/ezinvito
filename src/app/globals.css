@@ -117,6 +117,10 @@
     @apply border-border outline-none;
   }
 
+  html {
+  scroll-behavior: smooth;
+}
+
   body {
     @apply bg-background text-foreground;
   }
@@ -173,3 +177,4 @@
     background-size: 200% auto;
   }
 }
+

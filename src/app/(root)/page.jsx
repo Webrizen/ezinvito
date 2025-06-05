@@ -150,7 +150,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="w-full py-20 bg-zinc-100 dark:bg-zinc-950 relative overflow-hidden">
+      <section className="w-full py-20 bg-zinc-100 dark:bg-zinc-950 relative overflow-hidden" id="features">
 
         <div className="absolute inset-0 overflow-hidden bottom-0 right-0 left-0 top-0 m-auto bg-gradient-to-br dark:from-purple-600 from-purple-50 to-transparent w-[500px] h-[500px] blur-[900px]" />
 
