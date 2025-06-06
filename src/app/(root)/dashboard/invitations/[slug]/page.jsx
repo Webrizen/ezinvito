@@ -42,7 +42,7 @@ export default async function Page({ params }) {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
                 <h2 className="text-2xl md:text-3xl font-bold mb-2 dark:text-white text-zinc-950">{event.title}</h2>
-                <p className="dark:text-purple-100 text-zinc-500 max-w-3xl">{event.description}</p>
+                <p className="dark:text-purple-100 text-zinc-500 max-w-3xl text-ellipsis line-clamp-2">{event.description}</p>
               </div>
               <div className="dark:bg-white/20 bg-black/20 backdrop-blur-sm rounded-lg px-4 py-2">
                 <span className="font-semibold">{event.privacy === 'public' ? 'Public Event' : 'Private Event'}</span>

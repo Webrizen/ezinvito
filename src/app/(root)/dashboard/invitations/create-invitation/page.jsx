@@ -2,12 +2,14 @@
 import React, { useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
+import { Templates } from '@/enums/template';
 
 export default function Page() {
     const { userId } = useAuth();
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
+    const [isGenerating, setIsGenerating] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
         eventType: 'meetup',
@@ -79,6 +81,36 @@ export default function Page() {
                 ...prev,
                 [name]: type === 'checkbox' ? checked : value
             }));
+        }
+    };
+
+    const generateInvitationMessage = async () => {
+        setIsGenerating(true);
+        try {
+            const response = await fetch('/api/events/ai', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    eventData: formData
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to generate invitation');
+            }
+
+            const { message } = await response.json();
+            setFormData(prev => ({
+                ...prev,
+                description: message
+            }));
+        } catch (err) {
+            console.error('Generation error:', err);
+            setError('Failed to generate invitation message');
+        } finally {
+            setIsGenerating(false);
         }
     };
 
@@ -192,7 +224,7 @@ export default function Page() {
                         </div>
 
                         {/* Description */}
-                        <div>
+                        <div className='relative'>
                             <label htmlFor="description" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                 Description (optional)
                             </label>
@@ -205,6 +237,14 @@ export default function Page() {
                                 placeholder="Describe your event..."
                                 className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
                             />
+                            <button
+                                type="button"
+                                onClick={generateInvitationMessage}
+                                disabled={isGenerating}
+                                className="px-4 py-2 bg-blue-100 dark:bg-blue-50/10 dark:text-blue-50 cursor-pointer text-blue-700 rounded-full hover:bg-blue-200 transition-colors absolute bottom-4 right-2"
+                            >
+                                {isGenerating ? 'Generating...' : 'Generate beautiful message'}
+                            </button>
                         </div>
 
                         {/* Date Range */}
@@ -417,38 +457,7 @@ export default function Page() {
                         <div className="space-y-3">
                             <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Choose Invitation Template</label>
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                                {[
-                                    {
-                                        id: 'classic',
-                                        label: 'Classic',
-                                        image: 'https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=800&q=80',
-                                    },
-                                    {
-                                        id: 'modern',
-                                        label: 'Modern',
-                                        image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80',
-                                    },
-                                    {
-                                        id: 'elegant',
-                                        label: 'Elegant',
-                                        image: 'https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=800&q=80',
-                                    },
-                                    {
-                                        id: 'vintage',
-                                        label: 'Vintage',
-                                        image: 'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=800&q=80',
-                                    },
-                                    {
-                                        id: 'minimal',
-                                        label: 'Minimal',
-                                        image: 'https://images.unsplash.com/photo-1517705008128-361805f42e86?auto=format&fit=crop&w=800&q=80',
-                                    },
-                                    {
-                                        id: 'party',
-                                        label: 'Party',
-                                        image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80',
-                                    },
-                                ].map((template) => (
+                                {Templates.map((template) => (
                                     <label
                                         key={template.id}
                                         className="relative flex flex-col border-2 border-transparent rounded-lg overflow-hidden cursor-pointer group"
