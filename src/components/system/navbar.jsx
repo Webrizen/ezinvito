@@ -4,14 +4,6 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
-import {
   Sheet,
   SheetContent,
   SheetDescription,
@@ -43,24 +35,6 @@ const Navbar = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-
-  const links = [
-    {
-      href: "/custom-invitations",
-      title: "Invitations",
-      description: "Design animated cards or upload your own — RSVP-ready.",
-    },
-    {
-      href: "/guestbook",
-      title: "Guestbook",
-      description: "Collect RSVPs, preferences, and personal messages.",
-    },
-    {
-      href: "/gallery",
-      title: "Shared Gallery",
-      description: "Let guests upload photos. Relive the moments together.",
-    },
-  ];
 
   return (
     <header className={`p-2 fixed top-0 z-50 w-full transition-all duration-300 ${isScrolled

@@ -2,6 +2,11 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
+import EzInvito from "@/assets/logo.png";
+import { UserButton, useAuth } from "@clerk/nextjs";
+import Image from "next/image";
+import { ThemeToggleButton } from '../ui/theme-toggle-button';
+import { Button } from '../ui/button';
 
 const Sidebar = ({ children }) => {
   const [sidebarToggled, setSidebarToggled] = useState(false)
@@ -9,7 +14,7 @@ const Sidebar = ({ children }) => {
   const toggleSidebar = () => {
     setSidebarToggled(sidebarToggled => !sidebarToggled)
   }
-
+  const { isSignedIn } = useAuth();
   // Function to check if a link is active
   const isActive = (href) => {
     return pathname === href ||
@@ -17,13 +22,26 @@ const Sidebar = ({ children }) => {
   }
 
   return (
-    <div className="flex h-[91dvh] overflow-hidden scrollbar-hide mt-16">
+    <div className="flex h-screen overflow-hidden scrollbar-hide">
       {/* Sidebar */}
       <aside
         data-sidebar
         className={`fixed h-full py-3 overflow-hidden lg:static w-11/12 max-w-[18rem] md:w-72 transition-all ${sidebarToggled ? 'translate-x-0' : '-translate-x-full'
           } lg:translate-x-0 bg-white dark:bg-zinc-950 shadow-lg shadow-zinc-200/40 dark:shadow-zinc-800/10 flex flex-col justify-between px-4 z-50`}
       >
+        <Link
+          href="/"
+          className="h-10 w-auto flex gap-2 items-center p-1 rounded-md hover:bg-[rgba(225,225,225,0.05)] ml-3"
+        >
+          <Image
+            src={EzInvito}
+            alt="EzInvito Logo"
+            width={500}
+            height={500}
+            className="h-full w-auto invert dark:filter-none"
+          />
+          <span className="md:block hidden whitespace-nowrap">EzInvito</span>
+        </Link>
         <nav className="flex-1 pt-6">
           <ul className="text-zinc-700 dark:text-zinc-300 space-y-3">
             <li className={`relative ${isActive('/dashboard') ? 'before:absolute before:-left-4 before:w-1.5 before:h-4/5 before:rounded-r-md before:top-1/2 before:-translate-y-1/2 before:bg-blue-600' : ''}`}>
@@ -85,24 +103,39 @@ const Sidebar = ({ children }) => {
           </ul>
         </nav>
         <div>
-          <div className="flex flex-col gap-y-2 text-zinc-700 dark:text-zinc-300">
+          <div className="flex flex-row gap-x-2 text-zinc-700 dark:text-zinc-300">
             <Link
               href="/contact"
-              className={`flex items-center px-4 py-2.5 gap-x-3 rounded-md ${pathname === '/contact' ? 'text-blue-600 bg-zinc-50 dark:bg-zinc-900/80' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800/50'}`}
+              className={`flex items-center px-4 py-2.5 gap-x-3 rounded-full ${pathname === '/contact' ? 'text-blue-600 bg-zinc-50 dark:bg-zinc-900/80' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800/50'} w-full`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
               </svg>
               Support
             </Link>
+            <ThemeToggleButton variant="circle-blur" start="bottom-left" />
+            {isSignedIn ? (
+              <>
+                <UserButton />
+              </>
+            ) : (
+              <Button asChild>
+                <Link
+                  href="/auth/sign-in"
+                >
+                  Login
+                </Link>
+              </Button>
+            )}
           </div>
+
         </div>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 overflow-auto bg-zinc-50 dark:bg-zinc-900">
         {/* Mobile Toggle Button */}
-        <div className="flex lg:hidden fixed right-2 bottom-2 p-4 z-40">
+        <div className="flex lg:hidden fixed right-2 top-2 p-4 z-40">
           <button
             onClick={toggleSidebar}
             className="p-3 rounded-full bg-blue-600 dark:bg-blue-500 outline-none w-12 aspect-square flex flex-col relative justify-center items-center"
