@@ -10,6 +10,8 @@ export default function Page() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
     const [isGenerating, setIsGenerating] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
     const [formData, setFormData] = useState({
         title: '',
         eventType: 'meetup',
@@ -85,6 +87,22 @@ export default function Page() {
     };
 
     const generateInvitationMessage = async () => {
+        const requiredFields = [
+            { field: formData.title, name: "Event Title" },
+            { field: formData.host, name: "Host Name" },
+            { field: formData.date, name: "Start Date" },
+        ];
+
+        const missingFields = requiredFields.filter(item => !item.field);
+
+        if (missingFields.length > 0) {
+            setAlertMessage(
+                `Please fill in these required fields first: ${missingFields.map(f => f.name).join(', ')}. 
+      This helps us generate a more personalized invitation message for you.`
+            );
+            setShowAlert(true);
+            return;
+        }
         setIsGenerating(true);
         try {
             const response = await fetch('/api/events/ai', {
@@ -116,15 +134,13 @@ export default function Page() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Submitting data:', formData); // Debug log
 
         if (!userId) {
             setError('Please sign in to create an event');
             return;
         }
-
-        setIsSubmitting(true);
         setError('');
+        isSubmitting(true);
 
         try {
             const response = await fetch('/api/events', {
@@ -242,6 +258,7 @@ export default function Page() {
                                 onClick={generateInvitationMessage}
                                 disabled={isGenerating}
                                 className="px-4 py-2 bg-blue-100 dark:bg-blue-50/10 dark:text-blue-50 cursor-pointer text-blue-700 rounded-full hover:bg-blue-200 transition-colors absolute bottom-4 right-2"
+                                title="Fill in event details first for best results"
                             >
                                 {isGenerating ? 'Generating...' : 'Generate beautiful message'}
                             </button>
@@ -565,6 +582,34 @@ export default function Page() {
 
                     {/* Sidebar */}
                     <div className="space-y-5 p-5 h-min sticky top-1 bg-zinc-100 dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
+                        {showAlert && (
+                            <div className="bg-white dark:bg-zinc-500 rounded-lg p-6 max-w-md w-full shadow-xl">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
+                                            Almost there!
+                                        </h3>
+                                        <button
+                                            onClick={() => setShowAlert(false)}
+                                            className="text-zinc-400 hover:text-zinc-500 dark:hover:text-zinc-300"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <p className="text-zinc-600 dark:text-zinc-300 mb-6">
+                                        {alertMessage}
+                                    </p>
+                                    <div className="flex justify-end">
+                                        <button
+                                            onClick={() => setShowAlert(false)}
+                                            className="px-4 py-2 bg-zinc-600 hover:bg-zinc-700 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-white rounded-md transition-colors"
+                                        >
+                                            Got it!
+                                        </button>
+                                    </div>
+                                </div>
+                        )}
                         <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100">Tips for Creating a Great Event</h2>
 
                         <div className="space-y-4 text-sm text-zinc-600 dark:text-zinc-300">
