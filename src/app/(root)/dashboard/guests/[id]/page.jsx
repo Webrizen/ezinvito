@@ -44,7 +44,7 @@ export default async function page({ params }) {
                             </span>
                         </div>
                         {event.description && (
-                            <p className="text-zinc-600 dark:text-zinc-400 max-w-3xl">{event.description}</p>
+                            <p className="text-zinc-600 dark:text-zinc-400 max-w-3xl line-clamp-3">{event.description}</p>
                         )}
                     </div>
                     <div className="flex flex-wrap gap-2">

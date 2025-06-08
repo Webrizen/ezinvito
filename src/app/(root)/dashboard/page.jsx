@@ -1,103 +1,231 @@
 import React from 'react';
-import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
+import { CalendarIcon, ClockIcon, MapPinIcon, CheckCircleIcon, XCircleIcon, HelpCircleIcon, UserIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
+  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { format, parseISO } from 'date-fns';
+import { auth } from '@clerk/nextjs/server';
 
-export default function page() {
+export default async function page() {
+  const { userId } = await auth();
+  const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/dashboard?userId=${userId}`, {
+    method: 'GET',
+    cache: 'no-store',
+  });
+
+  const dashboardData = await response.json();
+
+  if (dashboardData.error) {
+    return <div className="text-red-500 text-center mt-10">{dashboardData.error}</div>;
+  }
+
+  if (!response.ok) {
+    return <div className="text-yellow-500 text-center mt-10">Error fetching</div>;
+  }
+
+  const data = dashboardData.response;
+
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case 'going':
+        return <Badge variant="success" className="gap-1"><CheckCircleIcon className="size-3" /> Going</Badge>;
+      case 'not-going':
+        return <Badge variant="destructive" className="gap-1"><XCircleIcon className="size-3" /> Not Going</Badge>;
+      case 'not-sure':
+        return <Badge variant="secondary" className="gap-1"><HelpCircleIcon className="size-3" /> Not Sure</Badge>;
+      default:
+        return <Badge variant="outline">Unknown</Badge>;
+    }
+  };
+
+  const formatDate = (dateString) => {
+    return format(parseISO(dateString), 'MMM dd, yyyy h:mm a');
+  };
+
   return (
-    <>
-     <div className="*:data-[slot=card]:shadow-xs md:grid-cols-4 grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
-      <Card className="@container/card">
-        <CardHeader className="relative">
-          <CardDescription>Total Revenue</CardDescription>
-          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            $1,250.00
-          </CardTitle>
-          <div className="absolute right-4 top-4">
-            <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              <TrendingUpIcon className="size-3" />
-              +12.5%
-            </Badge>
+    <div className="w-full p-4 space-y-6">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader>
+            <CardDescription>Total Events</CardDescription>
+            <CardTitle className="text-2xl font-semibold">{data.totalEvents}</CardTitle>
+          </CardHeader>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardDescription>Upcoming Events</CardDescription>
+            <CardTitle className="text-2xl font-semibold">{data.totalUpcoming}</CardTitle>
+          </CardHeader>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardDescription>Past Events</CardDescription>
+            <CardTitle className="text-2xl font-semibold">{data.totalPast}</CardTitle>
+          </CardHeader>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardDescription>Total Guests</CardDescription>
+            <CardTitle className="text-2xl font-semibold">{data.totalGuests}</CardTitle>
+          </CardHeader>
+        </Card>
+      </div>
+
+      {/* Main Content */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Upcoming Events */}
+<div className="lg:col-span-2 space-y-6">
+  <h2 className="text-xl font-semibold">Upcoming Events</h2>
+  {data.upcomingEvents.length > 0 ? (
+    data.upcomingEvents.map((event) => (
+      <Card key={event.id} className="shadow-sm hover:shadow-md transition-shadow">
+        <CardHeader className="border-b pb-4">
+          <CardTitle className="text-lg">{event.title}</CardTitle>
+          <div className="flex flex-col space-y-1 text-sm mt-2">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <CalendarIcon className="size-4" />
+              {formatDate(event.date)}
+            </div>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <MapPinIcon className="size-4" />
+              {event.location}
+            </div>
           </div>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month <TrendingUpIcon className="size-4" />
+        <CardContent className="pt-4">
+          <div className="grid grid-cols-4 gap-2 text-center">
+            <div className="space-y-1 border-r pr-2">
+              <p className="text-sm text-muted-foreground">Total</p>
+              <p className="font-semibold">{event.stats.total}</p>
+            </div>
+            <div className="space-y-1 border-r px-2">
+              <p className="text-sm text-muted-foreground">Going</p>
+              <p className="font-semibold">{event.stats.going}</p>
+            </div>
+            <div className="space-y-1 border-r px-2">
+              <p className="text-sm text-muted-foreground">Not Sure</p>
+              <p className="font-semibold">{event.stats.notSure}</p>
+            </div>
+            <div className="space-y-1 pl-2">
+              <p className="text-sm text-muted-foreground">Not Going</p>
+              <p className="font-semibold">{event.stats.notGoing}</p>
+            </div>
           </div>
-          <div className="text-muted-foreground">
-            Visitors for the last 6 months
-          </div>
-        </CardFooter>
+        </CardContent>
+        {event.rsvpDeadline && (
+          <CardFooter className="text-sm text-muted-foreground border-t pt-3 flex items-center gap-2 bg-muted/20 rounded-b-lg">
+            <ClockIcon className="size-4" />
+            RSVP Deadline: {formatDate(event.rsvpDeadline)}
+          </CardFooter>
+        )}
       </Card>
-      <Card className="@container/card">
-        <CardHeader className="relative">
-          <CardDescription>New Customers</CardDescription>
-          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            1,234
-          </CardTitle>
-          <div className="absolute right-4 top-4">
-            <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              <TrendingDownIcon className="size-3" />
-              -20%
-            </Badge>
+    ))
+  ) : (
+    <Card className="text-center py-8">
+      <CardHeader>
+        <CardTitle className="text-muted-foreground">No upcoming events</CardTitle>
+      </CardHeader>
+    </Card>
+  )}
+
+  {/* Past Events */}
+  <h2 className="text-xl font-semibold mt-8">Past Events</h2>
+  {data.pastEvents.length > 0 ? (
+    data.pastEvents.map((event) => (
+      <Card key={event.id} className="shadow-sm hover:shadow-md transition-shadow">
+        <CardHeader className="border-b pb-4">
+          <CardTitle className="text-lg">{event.title}</CardTitle>
+          <div className="flex flex-col space-y-1 text-sm mt-2">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <CalendarIcon className="size-4" />
+              {formatDate(event.date)}
+            </div>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <MapPinIcon className="size-4" />
+              {event.location}
+            </div>
           </div>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period <TrendingDownIcon className="size-4" />
+        <CardContent className="pt-4">
+          <div className="grid grid-cols-5 gap-2 text-center">
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Total</p>
+              <p className="font-semibold">{event.stats.total}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Going</p>
+              <p className="font-semibold">{event.stats.going}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Not Sure</p>
+              <p className="font-semibold">{event.stats.notSure}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Not Going</p>
+              <p className="font-semibold">{event.stats.notGoing}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Checked In</p>
+              <p className="font-semibold">{event.stats.checkedIn}</p>
+            </div>
           </div>
-          <div className="text-muted-foreground">
-            Acquisition needs attention
-          </div>
-        </CardFooter>
+        </CardContent>
       </Card>
-      <Card className="@container/card">
-        <CardHeader className="relative">
-          <CardDescription>Active Accounts</CardDescription>
-          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            45,678
-          </CardTitle>
-          <div className="absolute right-4 top-4">
-            <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              <TrendingUpIcon className="size-3" />
-              +12.5%
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Strong user retention <TrendingUpIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader className="relative">
-          <CardDescription>Growth Rate</CardDescription>
-          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            4.5%
-          </CardTitle>
-          <div className="absolute right-4 top-4">
-            <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              <TrendingUpIcon className="size-3" />
-              +4.5%
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Steady performance <TrendingUpIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Meets growth projections</div>
-        </CardFooter>
-      </Card>
+    ))
+  ) : (
+    <Card className="text-center py-8">
+      <CardHeader>
+        <CardTitle className="text-muted-foreground">No past events</CardTitle>
+      </CardHeader>
+    </Card>
+  )}
+</div>
+
+        {/* Recent Activity */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold">Recent Activity</h2>
+          <Card>
+            <CardHeader>
+              <CardTitle>Guest Responses</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {data.recentActivity.length > 0 ? (
+                data.recentActivity.map(activity => (
+                  <div key={activity.id} className="flex items-start gap-3">
+                    <div className="bg-secondary p-2 rounded-full">
+                      <UserIcon className="size-4" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <p className="font-medium">{activity.name}</p>
+                        <span className="text-sm text-muted-foreground">
+                          {format(parseISO(activity.respondedAt), 'MMM dd')}
+                        </span>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{activity.eventTitle}</p>
+                      <div className="mt-1">
+                        {getStatusBadge(activity.status)}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-muted-foreground">No recent activity</p>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
-    </>
   )
 }
