@@ -12,8 +12,8 @@ const Sidebar = ({ children }) => {
 
   // Function to check if a link is active
   const isActive = (href) => {
-    return pathname === href || 
-           (href !== '/dashboard' && pathname.startsWith(href))
+    return pathname === href ||
+      (href !== '/dashboard' && pathname.startsWith(href))
   }
 
   return (
@@ -27,8 +27,8 @@ const Sidebar = ({ children }) => {
         <nav className="flex-1 pt-6">
           <ul className="text-zinc-700 dark:text-zinc-300 space-y-3">
             <li className={`relative ${isActive('/dashboard') ? 'before:absolute before:-left-4 before:w-1.5 before:h-4/5 before:rounded-r-md before:top-1/2 before:-translate-y-1/2 before:bg-blue-600' : ''}`}>
-              <Link 
-                href="/dashboard" 
+              <Link
+                href="/dashboard"
                 className={`flex items-center px-4 py-2.5 gap-x-3 rounded-md ${isActive('/dashboard') ? 'text-blue-600 bg-zinc-50 dark:bg-zinc-900/80' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800/50'}`}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-6 h-6">
@@ -38,8 +38,8 @@ const Sidebar = ({ children }) => {
               </Link>
             </li>
             <li className={`relative ${isActive('/dashboard/invitations') ? 'before:absolute before:-left-4 before:w-1.5 before:h-4/5 before:rounded-r-md before:top-1/2 before:-translate-y-1/2 before:bg-blue-600' : ''}`}>
-              <Link 
-                href="/dashboard/invitations" 
+              <Link
+                href="/dashboard/invitations"
                 className={`flex items-center px-4 py-2.5 gap-x-3 rounded-md ${isActive('/dashboard/invitations') ? 'text-blue-600 bg-zinc-50 dark:bg-zinc-900/80' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800/50'}`}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
@@ -49,8 +49,8 @@ const Sidebar = ({ children }) => {
               </Link>
             </li>
             <li className={`relative ${isActive('/dashboard/calender') ? 'before:absolute before:-left-4 before:w-1.5 before:h-4/5 before:rounded-r-md before:top-1/2 before:-translate-y-1/2 before:bg-blue-600' : ''}`}>
-              <Link 
-                href="/dashboard/calender" 
+              <Link
+                href="/dashboard/calender"
                 className={`flex items-center px-4 py-2.5 gap-x-3 rounded-md ${isActive('/dashboard/calender') ? 'text-blue-600 bg-zinc-50 dark:bg-zinc-900/80' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800/50'}`}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
@@ -60,8 +60,8 @@ const Sidebar = ({ children }) => {
               </Link>
             </li>
             <li className={`relative ${isActive('/dashboard/guests') ? 'before:absolute before:-left-4 before:w-1.5 before:h-4/5 before:rounded-r-md before:top-1/2 before:-translate-y-1/2 before:bg-blue-600' : ''}`}>
-              <Link 
-                href="/dashboard/guests" 
+              <Link
+                href="/dashboard/guests"
                 className={`flex items-center px-4 py-2.5 gap-x-3 rounded-md ${isActive('/dashboard/guests') ? 'text-blue-600 bg-zinc-50 dark:bg-zinc-900/80' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800/50'}`}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
@@ -71,8 +71,8 @@ const Sidebar = ({ children }) => {
               </Link>
             </li>
             <li className={`relative ${isActive('/dashboard/qr') ? 'before:absolute before:-left-4 before:w-1.5 before:h-4/5 before:rounded-r-md before:top-1/2 before:-translate-y-1/2 before:bg-blue-600' : ''}`}>
-              <Link 
-                href="/dashboard/qr-verification" 
+              <Link
+                href="/dashboard/qr-verification"
                 className={`flex items-center px-4 py-2.5 gap-x-3 rounded-md ${isActive('/dashboard/qr') ? 'text-blue-600 bg-zinc-50 dark:bg-zinc-900/80' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800/50'}`}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -86,8 +86,8 @@ const Sidebar = ({ children }) => {
         </nav>
         <div>
           <div className="flex flex-col gap-y-2 text-zinc-700 dark:text-zinc-300">
-            <Link 
-              href="/contact" 
+            <Link
+              href="/contact"
               className={`flex items-center px-4 py-2.5 gap-x-3 rounded-md ${pathname === '/contact' ? 'text-blue-600 bg-zinc-50 dark:bg-zinc-900/80' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800/50'}`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
@@ -102,7 +102,7 @@ const Sidebar = ({ children }) => {
       {/* Main Content */}
       <main className="flex-1 overflow-auto bg-zinc-50 dark:bg-zinc-900">
         {/* Mobile Toggle Button */}
-        <div className="flex lg:hidden fixed right-2 top-2 p-4 z-40">
+        <div className="flex lg:hidden fixed right-2 bottom-2 p-4 z-40">
           <button
             onClick={toggleSidebar}
             className="p-3 rounded-full bg-blue-600 dark:bg-blue-500 outline-none w-12 aspect-square flex flex-col relative justify-center items-center"

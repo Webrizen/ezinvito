@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { getAuth } from '@clerk/nextjs/server';
-
 import Event from "@/models/event";
 import connectDB from '@/lib/db';
 
@@ -34,7 +33,7 @@ export async function GET(request, { params }) {
 export async function PATCH(request, { params }) {
   await connectDB();
   const { userId } = getAuth(request);
-const { id } = await params;
+  const { id } = await params;
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -42,7 +41,7 @@ const { id } = await params;
   try {
     const body = await request.json();
     const updatedEvent = await Event.findOneAndUpdate(
-      { _id: id, host: userId },
+      { _id: id, userId: userId },
       { $set: body },
       { new: true }
     );
@@ -71,7 +70,7 @@ export async function DELETE(request, { params }) {
     return NextResponse.json({ error: "Event ID is required" }, { status: 400 });
   }
   const { userId } = getAuth(request);
-  
+
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -81,14 +80,14 @@ export async function DELETE(request, { params }) {
       _id: id,
       userId: userId
     });
-    
+
     if (!deletedEvent) {
       return NextResponse.json(
         { error: "Event not found" },
         { status: 404 }
       );
     }
-    
+
     return NextResponse.json(
       { message: "Event deleted successfully" },
       { status: 200 }
