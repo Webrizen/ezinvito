@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation';
 import { Templates } from '@/enums/template';
 
 const isoToDatetimeLocal = (isoString) => {
-  if (!isoString) return '';
-  const date = new Date(isoString);
-  const pad = (num) => num.toString().padStart(2, '0');
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    if (!isoString) return '';
+    const date = new Date(isoString);
+    const pad = (num) => num.toString().padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 };
 
 export default function EditForm({ event }) {
@@ -41,10 +41,16 @@ export default function EditForm({ event }) {
         },
         customSlug: event?.customSlug || '',
         privacy: event?.privacy || 'invite-only',
-        templateId: event?.templateId || 'classic',
+        invitationDesign: {
+            templateId: event?.invitationDesign?.templateId || 'classic'
+        },
         galleryEnabled: event?.galleryEnabled ?? true,
         guestbookEnabled: event?.guestbookEnabled ?? true,
-        qrcodeEnabled: event?.qrcodeEnabled ?? true,
+        qrSettings: {
+            enabled: event?.qrSettings?.enabled ?? true,
+            expiresAt: event?.qrSettings?.expiresAt || null,
+            secretKey: event?.qrSettings?.secretKey || ''
+        },
         rsvpDeadline: isoToDatetimeLocal(event?.rsvpDeadline) || '',
         tags: event?.tags || []
     });
@@ -84,6 +90,28 @@ export default function EditForm({ event }) {
                 .filter(tag => tag.length > 0);
             setFormData(prev => ({ ...prev, tags: tagsArray }));
         }
+        // Handle invitation design fields
+        else if (name.startsWith('invitationDesign.')) {
+            const field = name.split('invitationDesign.')[1];
+            setFormData(prev => ({
+                ...prev,
+                invitationDesign: {
+                    ...prev.invitationDesign,
+                    [field]: type === 'checkbox' ? checked : value
+                }
+            }));
+        }
+        // Handle qr settings fields
+        else if (name.startsWith('qrSettings.')) {
+            const field = name.split('qrSettings.')[1];
+            setFormData(prev => ({
+                ...prev,
+                qrSettings: {
+                    ...prev.qrSettings,
+                    [field]: type === 'checkbox' ? checked : value
+                }
+            }));
+        }
         // Handle top-level fields
         else {
             setFormData(prev => ({
@@ -91,6 +119,26 @@ export default function EditForm({ event }) {
                 [name]: type === 'checkbox' ? checked : value
             }));
         }
+    };
+
+    const generateSlugFromTitle = () => {
+        if (!formData.title) {
+            setAlertMessage("Please enter an event title first");
+            setShowAlert(true);
+            return;
+        }
+
+        // Convert to lowercase, replace spaces with hyphens, remove special chars
+        const slug = formData.title
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, '') // Remove special chars
+            .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
+            .replace(/^-+|-+$/g, ''); // Trim leading/trailing hyphens
+
+        setFormData(prev => ({
+            ...prev,
+            customSlug: slug
+        }));
     };
 
     const generateInvitationMessage = async () => {
@@ -181,7 +229,7 @@ export default function EditForm({ event }) {
             <div className="bg-zinc-50 dark:bg-zinc-900 p-4">
                 <div className="w-full">
                     <h1 className="text-2xl md:text-3xl font-bold text-zinc-800 dark:text-zinc-100 mb-6">Edit Your Event</h1>
-    
+
                     <form onSubmit={handleSubmit} className="grid md:grid-cols-[2fr_1fr] gap-6">
                         {/* Main Form */}
                         <div className="space-y-6">
@@ -201,7 +249,7 @@ export default function EditForm({ event }) {
                                     className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
                                 />
                             </div>
-    
+
                             {/* Event Type */}
                             <div>
                                 <label htmlFor="eventType" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
@@ -229,7 +277,7 @@ export default function EditForm({ event }) {
                                     <option value="corporate">Corporate</option>
                                 </select>
                             </div>
-    
+
                             {/* Host Name */}
                             <div>
                                 <label htmlFor="hostName" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
@@ -246,7 +294,7 @@ export default function EditForm({ event }) {
                                     className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
                                 />
                             </div>
-    
+
                             {/* Description */}
                             <div className='relative'>
                                 <label htmlFor="description" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
@@ -271,7 +319,7 @@ export default function EditForm({ event }) {
                                     {isGenerating ? 'Generating...' : 'Generate beautiful message'}
                                 </button>
                             </div>
-    
+
                             {/* Date Range */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
@@ -302,7 +350,7 @@ export default function EditForm({ event }) {
                                     />
                                 </div>
                             </div>
-    
+
                             {/* Location */}
                             <div className="space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
@@ -335,7 +383,7 @@ export default function EditForm({ event }) {
                                         />
                                     </div>
                                 </div>
-    
+
                                 <div className="grid grid-cols-3 gap-4">
                                     <div>
                                         <label htmlFor="state" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
@@ -380,7 +428,7 @@ export default function EditForm({ event }) {
                                         />
                                     </div>
                                 </div>
-    
+
                                 <div>
                                     <label className="flex items-center gap-3 p-3 border border-zinc-300 dark:border-zinc-600 rounded-lg cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800">
                                         <input
@@ -393,7 +441,7 @@ export default function EditForm({ event }) {
                                         <span className="text-sm text-zinc-700 dark:text-zinc-300">This is an online event</span>
                                     </label>
                                 </div>
-    
+
                                 {formData.location.onlineEvent && (
                                     <div>
                                         <label htmlFor="meetingLink" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
@@ -412,28 +460,38 @@ export default function EditForm({ event }) {
                                     </div>
                                 )}
                             </div>
-    
+
                             {/* Custom URL */}
                             <div>
                                 <label htmlFor="customSlug" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                     Custom URL
                                 </label>
-                                <div className="flex items-center border border-zinc-300 dark:border-zinc-600 rounded-lg overflow-hidden">
-                                    <span className="px-3 ml-2 rounded-4xl text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-700">ezinvito.webrizen.com/</span>
-                                    <input
-                                        id="customSlug"
-                                        type="text"
-                                        name="customSlug"
-                                        value={formData.customSlug}
-                                        onChange={handleChange}
-                                        pattern="[a-z0-9-]+"
-                                        title="Only lowercase letters, numbers and hyphens allowed"
-                                        placeholder="custom-url"
-                                        className="w-full px-3 py-2 bg-transparent outline-none"
-                                    />
+                                <div className="flex gap-2">
+                                    <div className="flex-1 flex items-center border border-zinc-300 dark:border-zinc-600 rounded-lg overflow-hidden">
+                                        <span className="px-3 ml-2 rounded-4xl text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-700">ezinvito.webrizen.com/</span>
+                                        <input
+                                            id="customSlug"
+                                            type="text"
+                                            name="customSlug"
+                                            value={formData.customSlug}
+                                            onChange={handleChange}
+                                            pattern="[a-z0-9-]+"
+                                            title="Only lowercase letters, numbers and hyphens allowed"
+                                            placeholder="custom-url"
+                                            className="w-full px-3 py-2 bg-transparent outline-none"
+                                        />
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={generateSlugFromTitle}
+                                        className="px-4 py-2 bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 text-zinc-700 dark:text-zinc-200 rounded-lg whitespace-nowrap"
+                                        title="Generate from event title"
+                                    >
+                                        Auto-generate
+                                    </button>
                                 </div>
                             </div>
-    
+
                             {/* Privacy Settings */}
                             <div className="space-y-3">
                                 <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Privacy Settings</p>
@@ -477,7 +535,7 @@ export default function EditForm({ event }) {
                                     ))}
                                 </div>
                             </div>
-    
+
                             {/* Template Selection */}
                             <div className="space-y-3">
                                 <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Choose Invitation Template</label>
@@ -489,9 +547,9 @@ export default function EditForm({ event }) {
                                         >
                                             <input
                                                 type="radio"
-                                                name="templateId"
+                                                name="invitationDesign.templateId"
                                                 value={template.id}
-                                                checked={formData.templateId === template.id}
+                                                checked={formData.invitationDesign.templateId === template.id}
                                                 onChange={handleChange}
                                                 className="sr-only peer"
                                             />
@@ -507,7 +565,7 @@ export default function EditForm({ event }) {
                                     ))}
                                 </div>
                             </div>
-    
+
                             {/* Features Toggles */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <label className="flex items-center gap-3 p-3 border border-zinc-300 dark:border-zinc-600 rounded-lg cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800">
@@ -533,15 +591,15 @@ export default function EditForm({ event }) {
                                 <label className="flex items-center gap-3 p-3 border border-zinc-300 dark:border-zinc-600 rounded-lg cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800">
                                     <input
                                         type="checkbox"
-                                        name="qrcodeEnabled"
-                                        checked={formData.qrcodeEnabled}
+                                        name="qrSettings.enabled"
+                                        checked={formData.qrSettings.enabled}
                                         onChange={handleChange}
                                         className="w-4 h-4 text-zinc-600 dark:text-zinc-500 focus:ring-zinc-500 border-zinc-300 dark:border-zinc-600 rounded"
                                     />
                                     <span className="text-sm text-zinc-700 dark:text-zinc-300">Enable QR Code</span>
                                 </label>
                             </div>
-    
+
                             {/* RSVP Deadline */}
                             <div>
                                 <label htmlFor="rsvpDeadline" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
@@ -556,7 +614,7 @@ export default function EditForm({ event }) {
                                     className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
                                 />
                             </div>
-    
+
                             {/* Tags */}
                             <div>
                                 <label htmlFor="tags" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
@@ -572,7 +630,7 @@ export default function EditForm({ event }) {
                                     className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
                                 />
                             </div>
-    
+
                             {/* Submit Button */}
                             <button
                                 type="submit"
@@ -581,38 +639,38 @@ export default function EditForm({ event }) {
                             >
                                 {isSubmitting ? 'Updating...' : 'Update Event'}
                             </button>
-                            
+
                         </div>
-    
+
                         {/* Sidebar */}
                         <div className="space-y-5 p-5 h-min sticky top-1 bg-zinc-100 dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
                             {showAlert && (
                                 <div className="bg-white dark:bg-zinc-500 rounded-lg p-6 max-w-md w-full shadow-xl">
-                                        <div className="flex justify-between items-start mb-4">
-                                            <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
-                                                Almost there!
-                                            </h3>
-                                            <button
-                                                onClick={() => setShowAlert(false)}
-                                                className="text-zinc-400 hover:text-zinc-500 dark:hover:text-zinc-300"
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                        <p className="text-zinc-600 dark:text-zinc-300 mb-6">
-                                            {alertMessage}
-                                        </p>
-                                        <div className="flex justify-end">
-                                            <button
-                                                onClick={() => setShowAlert(false)}
-                                                className="px-4 py-2 bg-zinc-600 hover:bg-zinc-700 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-white rounded-md transition-colors"
-                                            >
-                                                Got it!
-                                            </button>
-                                        </div>
+                                    <div className="flex justify-between items-start mb-4">
+                                        <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
+                                            Almost there!
+                                        </h3>
+                                        <button
+                                            onClick={() => setShowAlert(false)}
+                                            className="text-zinc-400 hover:text-zinc-500 dark:hover:text-zinc-300"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
                                     </div>
+                                    <p className="text-zinc-600 dark:text-zinc-300 mb-6">
+                                        {alertMessage}
+                                    </p>
+                                    <div className="flex justify-end">
+                                        <button
+                                            onClick={() => setShowAlert(false)}
+                                            className="px-4 py-2 bg-zinc-600 hover:bg-zinc-700 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-white rounded-md transition-colors"
+                                        >
+                                            Got it!
+                                        </button>
+                                    </div>
+                                </div>
                             )}
                             {error && (
                                 <div className="my-4 p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded-lg">
@@ -620,7 +678,7 @@ export default function EditForm({ event }) {
                                 </div>
                             )}
                             <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100">Tips for Creating a Great Event</h2>
-    
+
                             <div className="space-y-4 text-sm text-zinc-600 dark:text-zinc-300">
                                 {/* Tip 1 */}
                                 <div>
@@ -630,7 +688,7 @@ export default function EditForm({ event }) {
                                         Mention the purpose, agenda, or any special instructions here.
                                     </p>
                                 </div>
-    
+
                                 {/* Tip 2 */}
                                 <div>
                                     <h3 className="font-medium text-zinc-800 dark:text-zinc-200 mb-1">Choose the Right Privacy Setting</h3>
@@ -638,7 +696,7 @@ export default function EditForm({ event }) {
                                         Public events are open to everyone, while Invite Only ensures only those with a code can join. Choose carefully depending on the nature of your event.
                                     </p>
                                 </div>
-    
+
                                 {/* Tip 3 */}
                                 <div>
                                     <h3 className="font-medium text-zinc-800 dark:text-zinc-200 mb-1">Online Events Need a Link</h3>
@@ -646,7 +704,7 @@ export default function EditForm({ event }) {
                                         If this is an online event, be sure to provide a valid meeting link. Double-check it so your attendees don't miss out!
                                     </p>
                                 </div>
-    
+
                                 {/* Tip 4 */}
                                 <div>
                                     <h3 className="font-medium text-zinc-800 dark:text-zinc-200 mb-1">Enable Optional Features</h3>
@@ -654,7 +712,7 @@ export default function EditForm({ event }) {
                                         Enhance your event by enabling features like Guestbook, Photo Gallery, or QR Code access. These small additions can create a more memorable experience for your guests.
                                     </p>
                                 </div>
-    
+
                                 {/* Tip 5 */}
                                 <div>
                                     <h3 className="font-medium text-zinc-800 dark:text-zinc-200 mb-1">Double Check Dates & Times</h3>
@@ -663,7 +721,7 @@ export default function EditForm({ event }) {
                                     </p>
                                 </div>
                             </div>
-    
+
                             {/* Call to Action */}
                             <div className="pt-4 mt-4 border-t border-zinc-200 dark:border-zinc-700">
                                 <p className="text-xs italic text-zinc-500 dark:text-zinc-400">

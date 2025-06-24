@@ -198,10 +198,10 @@ export default function EventInvitation({ event, slug }) {
                             </div>
 
                             {/* Description */}
-                            <div className="mt-6 mb-8 text-center">
+                            <div className="mt-6 mb-8 text-center !text-[6px]">
                                 <p className="text-sm italic text-zinc-600 px-4">
                                     {event?.description ||
-                                        "Join us for an exciting meetup where tech enthusiasts gather to discuss the latest innovations in AI, blockchain, and more."}
+                                        "RSVP Now"}
                                 </p>
                             </div>
 

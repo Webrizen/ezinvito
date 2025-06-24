@@ -69,14 +69,11 @@ rsvp deadline: ${rsvpDeadline}
 
 Please craft a warm, inviting message that includes all the key details while maintaining an elegant tone. The message should:
 - Start with an engaging opening
-- Include all essential details (what, when, where)
 - Have a personal touch from the host
 - End with a clear call-to-action (RSVP deadline only)
-- Be approximately 1 paragraphs long
-- Use appropriate emojis if they fit the event type
 - Maintain a professional yet friendly tone
 
-Format the response in paragraph`;
+Format the response in paragraph with no bullet points or lists. the message should not be more than 10 to 15 words.`;
 }
 
 async function getGeminiSummary(content) {

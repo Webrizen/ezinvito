@@ -34,7 +34,9 @@ export default function Page() {
         },
         customSlug: '',
         privacy: 'invite-only',
-        templateId: 'classic',
+        invitationDesign: {
+            templateId: 'classic'
+        },
         galleryEnabled: true,
         guestbookEnabled: true,
         qrcodeEnabled: true,
@@ -77,6 +79,18 @@ export default function Page() {
                 .filter(tag => tag.length > 0);
             setFormData(prev => ({ ...prev, tags: tagsArray }));
         }
+
+        else if (name.startsWith('invitationDesign.')) {
+            const field = name.split('invitationDesign.')[1];
+            setFormData(prev => ({
+                ...prev,
+                invitationDesign: {
+                    ...prev.invitationDesign,
+                    [field]: type === 'checkbox' ? checked : value
+                }
+            }));
+        }
+
         // Handle top-level fields
         else {
             setFormData(prev => ({
@@ -140,7 +154,7 @@ export default function Page() {
             return;
         }
         setError('');
-        isSubmitting(true);
+        setIsSubmitting(true);
 
         try {
             const response = await fetch('/api/events', {
@@ -167,6 +181,26 @@ export default function Page() {
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const generateSlugFromTitle = () => {
+        if (!formData.title) {
+            setAlertMessage("Please enter an event title first");
+            setShowAlert(true);
+            return;
+        }
+
+        // Convert to lowercase, replace spaces with hyphens, remove special chars
+        const slug = formData.title
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, '') // Remove special chars
+            .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
+            .replace(/^-+|-+$/g, ''); // Trim leading/trailing hyphens
+
+        setFormData(prev => ({
+            ...prev,
+            customSlug: slug
+        }));
     };
 
     return (
@@ -410,19 +444,29 @@ export default function Page() {
                             <label htmlFor="customSlug" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                 Custom URL
                             </label>
-                            <div className="flex items-center border border-zinc-300 dark:border-zinc-600 rounded-lg overflow-hidden">
-                                <span className="px-3 ml-2 rounded-4xl text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-700">ezinvito.webrizen.com/</span>
-                                <input
-                                    id="customSlug"
-                                    type="text"
-                                    name="customSlug"
-                                    value={formData.customSlug}
-                                    onChange={handleChange}
-                                    pattern="[a-z0-9-]+"
-                                    title="Only lowercase letters, numbers and hyphens allowed"
-                                    placeholder="custom-url"
-                                    className="w-full px-3 py-2 bg-transparent outline-none"
-                                />
+                            <div className="flex gap-2">
+                                <div className="flex-1 flex items-center border border-zinc-300 dark:border-zinc-600 rounded-lg overflow-hidden">
+                                    <span className="px-3 ml-2 rounded-4xl text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-700">ezinvito.webrizen.com/</span>
+                                    <input
+                                        id="customSlug"
+                                        type="text"
+                                        name="customSlug"
+                                        value={formData.customSlug}
+                                        onChange={handleChange}
+                                        pattern="[a-z0-9-]+"
+                                        title="Only lowercase letters, numbers and hyphens allowed"
+                                        placeholder="custom-url"
+                                        className="w-full px-3 py-2 bg-transparent outline-none"
+                                    />
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={generateSlugFromTitle}
+                                    className="px-4 py-2 bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 text-zinc-700 dark:text-zinc-200 rounded-lg whitespace-nowrap"
+                                    title="Generate from event title"
+                                >
+                                    Auto-generate
+                                </button>
                             </div>
                         </div>
 
@@ -481,9 +525,9 @@ export default function Page() {
                                     >
                                         <input
                                             type="radio"
-                                            name="templateId"
+                                            name="invitationDesign.templateId"
                                             value={template.id}
-                                            checked={formData.templateId === template.id}
+                                            checked={formData.invitationDesign.templateId === template.id}
                                             onChange={handleChange}
                                             className="sr-only peer"
                                         />
@@ -584,31 +628,31 @@ export default function Page() {
                     <div className="space-y-5 p-5 h-min sticky top-1 bg-zinc-100 dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
                         {showAlert && (
                             <div className="bg-white dark:bg-zinc-500 rounded-lg p-6 max-w-md w-full shadow-xl">
-                                    <div className="flex justify-between items-start mb-4">
-                                        <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
-                                            Almost there!
-                                        </h3>
-                                        <button
-                                            onClick={() => setShowAlert(false)}
-                                            className="text-zinc-400 hover:text-zinc-500 dark:hover:text-zinc-300"
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <p className="text-zinc-600 dark:text-zinc-300 mb-6">
-                                        {alertMessage}
-                                    </p>
-                                    <div className="flex justify-end">
-                                        <button
-                                            onClick={() => setShowAlert(false)}
-                                            className="px-4 py-2 bg-zinc-600 hover:bg-zinc-700 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-white rounded-md transition-colors"
-                                        >
-                                            Got it!
-                                        </button>
-                                    </div>
+                                <div className="flex justify-between items-start mb-4">
+                                    <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
+                                        Almost there!
+                                    </h3>
+                                    <button
+                                        onClick={() => setShowAlert(false)}
+                                        className="text-zinc-400 hover:text-zinc-500 dark:hover:text-zinc-300"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
                                 </div>
+                                <p className="text-zinc-600 dark:text-zinc-300 mb-6">
+                                    {alertMessage}
+                                </p>
+                                <div className="flex justify-end">
+                                    <button
+                                        onClick={() => setShowAlert(false)}
+                                        className="px-4 py-2 bg-zinc-600 hover:bg-zinc-700 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-white rounded-md transition-colors"
+                                    >
+                                        Got it!
+                                    </button>
+                                </div>
+                            </div>
                         )}
                         <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100">Tips for Creating a Great Event</h2>
 
