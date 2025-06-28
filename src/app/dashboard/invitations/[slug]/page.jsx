@@ -20,8 +20,6 @@ export default async function Page({ params }) {
     );
   }
 
-  console.log(event);
-
   const formatDate = (dateString) => {
     const options = {
       weekday: 'long',
