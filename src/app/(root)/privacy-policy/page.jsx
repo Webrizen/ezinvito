@@ -2,6 +2,11 @@ import React from 'react'
 import Link from 'next/link'
 import { Shield } from 'lucide-react'
 
+export const metadata = {
+  title: "Privacy Policy – EzInvito",
+  description: "Your privacy matters. Read EzInvito’s data policy, usage terms, and how we protect your information with enterprise-grade security.",
+};
+
 export default function page() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">

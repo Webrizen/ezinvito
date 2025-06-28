@@ -2,6 +2,12 @@ import React from 'react'
 import Link from 'next/link'
 import { FileText } from 'lucide-react'
 
+export const metadata = {
+  title: "Terms & Conditions – EzInvito",
+  description: "Read the terms and conditions for using EzInvito. Understand your rights, responsibilities, and the platform's usage policies.",
+};
+
+
 export default function TermsConditions() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">

@@ -4,6 +4,11 @@ import AboutImg from "@/assets/about.jpg";
 import Image from 'next/image';
 import { Building2, Code, Twitter } from 'lucide-react'
 
+export const metadata = {
+  title: "About Us – EzInvito by Webrizen",
+  description: "Learn about EzInvito’s mission to simplify event planning through AI-powered digital invites and guest management. Built with love by Webrizen.",
+};
+
 export default function page() {
   return (
     <div className="h-screen bg-zinc-50 dark:bg-zinc-900 grid md:grid-cols-[1fr_.5fr] overflow-hidden">

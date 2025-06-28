@@ -2,6 +2,12 @@ import React from 'react'
 import Link from 'next/link'
 import { Mail, Twitter, Building2 } from 'lucide-react'
 
+export const metadata = {
+  title: "Contact Us – EzInvito",
+  description: "Have questions, feedback, or support requests? Reach out to the EzInvito team — we're here to help you plan amazing events.",
+};
+
+
 export default function page() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">

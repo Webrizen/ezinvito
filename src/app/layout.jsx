@@ -11,34 +11,37 @@ const bricolage = Bricolage_Grotesque({
 });
 
 export const metadata = {
-  title: "EzInvito",
+  title: "EzInvito – Event Invitations & Guest Management by Webrizen",
   description:
-    "Plan events, create animated invitations, collect RSVPs, manage expenses, and share memories — all in one place.",
+    "Plan stunning events, create animated invites, manage RSVPs, track expenses, and share memories — all with EzInvito by Webrizen.",
   keywords: [
-    "event management",
+    "event management software",
     "RSVP platform",
-    "invitation maker",
-    "wedding website",
-    "animated invitation",
-    "custom RSVP",
-    "event planner",
-    "EzInvito",
-    "event dashboard",
-    "guest list management",
+    "invitation maker by Webrizen",
+    "animated wedding invitations",
+    "digital RSVP tool",
+    "guest list manager",
+    "event dashboard SaaS",
+    "custom RSVP link generator",
+    "EzInvito by Webrizen",
+    "wedding website builder",
+    "event automation tool",
+    "Webrizen event tools"
   ],
-  authors: [{ name: "EzInvito Team", url: "https://ezinvito.vercel.app" }],
-  creator: "EzInvito",
+  authors: [{ name: "Webrizen Team", url: "https://webrizen.com" }],
+  creator: "Webrizen",
   openGraph: {
-    title: "EzInvito",
-    description: "Create, invite, manage — the complete event toolkit.",
+    title: "EzInvito – Event Planning, Invitations & RSVP by Webrizen",
+    description:
+      "Simplify your events with EzInvito by Webrizen: custom invitations, smart RSVPs, guest tracking, and analytics — all in one powerful platform.",
     url: "https://ezinvito.vercel.app",
-    siteName: "EzInvito",
+    siteName: "EzInvito by Webrizen",
     images: [
       {
         url: "https://ezinvito.vercel.app/og-image.png",
         width: 1200,
         height: 630,
-        alt: "EzInvito - Your Event, Elevated",
+        alt: "EzInvito by Webrizen – Event Planning Simplified",
       },
     ],
     locale: "en_US",
@@ -46,9 +49,10 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "EzInvito",
+    title: "EzInvito – Plan, Invite, Celebrate | By Webrizen",
     creator: "@shadow_jsx",
-    description: "Plan. Invite. Celebrate. All in one place — EzInvito.",
+    description:
+      "Send beautiful animated invites, manage RSVPs, and plan events with ease. EzInvito by Webrizen is your complete event toolkit — free forever.",
     images: ["https://ezinvito.vercel.app/og-image.png"],
   },
   metadataBase: new URL("https://ezinvito.vercel.app"),
@@ -56,12 +60,14 @@ export const metadata = {
     index: true,
     follow: true,
   },
+  manifest: "/manifest.json",
   icons: {
     icon: "/icon.png",
     shortcut: "/icon.png",
     apple: "/icon.png",
   },
 };
+
 
 export default function RootLayout({ children }) {
   return (

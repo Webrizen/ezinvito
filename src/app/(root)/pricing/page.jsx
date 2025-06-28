@@ -1,6 +1,12 @@
 import React from 'react'
 import Link from 'next/link'
 
+export const metadata = {
+  title: "Pricing – EzInvito Plans & Features",
+  description: "Explore EzInvito's forever-free plan and upcoming premium features designed for professionals, teams, and enterprises.",
+};
+
+
 export default function page() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">

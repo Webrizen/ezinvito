@@ -2,6 +2,12 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import React from 'react'
 
+export const metadata = {
+    title: "EzInvito Showcase – Real Event Pages",
+    description: "Browse event pages built by our users using EzInvito. Get inspired by beautiful invites, custom RSVP forms, and live guest experiences.",
+};
+
+
 export default function page() {
     const stats = {
         users: 1248,
@@ -10,103 +16,103 @@ export default function page() {
         activeNow: 87,
     };
 
-   const testimonials = [
-  {
-    quote: "Cut our event setup time by 70%. Absolute game-changer.",
-    name: "Sarah K.",
-    company: "Elegant Weddings Co.",
-    role: "Lead Wedding Planner"
-  },
-  {
-    quote: "My club's attendance doubled after switching to automated invites.",
-    name: "Alex T.",
-    company: "NYU Entrepreneurship Club",
-    role: "President"
-  },
-  {
-    quote: "The AI suggestions for invite wording have made our corporate events feel more personal.",
-    name: "James L.",
-    company: "Microsoft",
-    role: "Event Coordinator"
-  },
-  {
-    quote: "Saved $3,000 last quarter by reducing no-shows with smart reminders.",
-    name: "Priya M.",
-    company: "TEDx Mumbai",
-    role: "Organizer"
-  },
-  {
-    quote: "Finally an event tool that doesn't require a PhD to use! Our volunteers love it.",
-    name: "Carlos G.",
-    company: "Food Bank Network",
-    role: "Volunteer Coordinator"
-  },
-  {
-    quote: "The analytics helped us identify our most engaged attendees - game changing for fundraising.",
-    name: "Naomi W.",
-    company: "Metropolitan Museum",
-    role: "Development Director"
-  }
-];
+    const testimonials = [
+        {
+            quote: "Cut our event setup time by 70%. Absolute game-changer.",
+            name: "Sarah K.",
+            company: "Elegant Weddings Co.",
+            role: "Lead Wedding Planner"
+        },
+        {
+            quote: "My club's attendance doubled after switching to automated invites.",
+            name: "Alex T.",
+            company: "NYU Entrepreneurship Club",
+            role: "President"
+        },
+        {
+            quote: "The AI suggestions for invite wording have made our corporate events feel more personal.",
+            name: "James L.",
+            company: "Microsoft",
+            role: "Event Coordinator"
+        },
+        {
+            quote: "Saved $3,000 last quarter by reducing no-shows with smart reminders.",
+            name: "Priya M.",
+            company: "TEDx Mumbai",
+            role: "Organizer"
+        },
+        {
+            quote: "Finally an event tool that doesn't require a PhD to use! Our volunteers love it.",
+            name: "Carlos G.",
+            company: "Food Bank Network",
+            role: "Volunteer Coordinator"
+        },
+        {
+            quote: "The analytics helped us identify our most engaged attendees - game changing for fundraising.",
+            name: "Naomi W.",
+            company: "Metropolitan Museum",
+            role: "Development Director"
+        }
+    ];
 
-const recentEvents = [
-  { 
-    name: "TechConf 2024", 
-    attendees: 320, 
-    location: "San Francisco",
-    type: "conference",
-    date: "2024-05-15"
-  },
-  { 
-    name: "Beach Cleanup", 
-    attendees: 85, 
-    location: "Miami",
-    type: "volunteer",
-    date: "2024-06-02"
-  },
-  { 
-    name: "Startup Mixer", 
-    attendees: 147, 
-    location: "Berlin",
-    type: "networking",
-    date: "2024-05-28"
-  },
-  { 
-    name: "Annual Gala", 
-    attendees: 420, 
-    location: "New York",
-    type: "fundraiser",
-    date: "2024-06-10"
-  },
-  { 
-    name: "Developer Workshop", 
-    attendees: 63, 
-    location: "Remote",
-    type: "workshop",
-    date: "2024-05-20"
-  },
-  { 
-    name: "Community Yoga", 
-    attendees: 38, 
-    location: "Austin",
-    type: "wellness",
-    date: "2024-06-05"
-  },
-  { 
-    name: "Investor Pitch Day", 
-    attendees: 92, 
-    location: "London",
-    type: "business",
-    date: "2024-05-22"
-  },
-  { 
-    name: "Book Launch", 
-    attendees: 115, 
-    location: "Paris",
-    type: "cultural",
-    date: "2024-06-08"
-  }
-];
+    const recentEvents = [
+        {
+            name: "TechConf 2024",
+            attendees: 320,
+            location: "San Francisco",
+            type: "conference",
+            date: "2024-05-15"
+        },
+        {
+            name: "Beach Cleanup",
+            attendees: 85,
+            location: "Miami",
+            type: "volunteer",
+            date: "2024-06-02"
+        },
+        {
+            name: "Startup Mixer",
+            attendees: 147,
+            location: "Berlin",
+            type: "networking",
+            date: "2024-05-28"
+        },
+        {
+            name: "Annual Gala",
+            attendees: 420,
+            location: "New York",
+            type: "fundraiser",
+            date: "2024-06-10"
+        },
+        {
+            name: "Developer Workshop",
+            attendees: 63,
+            location: "Remote",
+            type: "workshop",
+            date: "2024-05-20"
+        },
+        {
+            name: "Community Yoga",
+            attendees: 38,
+            location: "Austin",
+            type: "wellness",
+            date: "2024-06-05"
+        },
+        {
+            name: "Investor Pitch Day",
+            attendees: 92,
+            location: "London",
+            type: "business",
+            date: "2024-05-22"
+        },
+        {
+            name: "Book Launch",
+            attendees: 115,
+            location: "Paris",
+            type: "cultural",
+            date: "2024-06-08"
+        }
+    ];
 
     return (
         <div className="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100 transition-colors duration-200">
