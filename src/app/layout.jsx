@@ -60,6 +60,9 @@ export const metadata = {
     index: true,
     follow: true,
   },
+  verification: {
+    google: 'kThCblVYK2X0Rwp5rR1Tuy4Pv50WA26VgDFB4MZTt2o',
+  },
   manifest: "/manifest.json",
   icons: {
     icon: "/icon.png",
