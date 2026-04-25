@@ -1,176 +1,178 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import EzInvito from "@/assets/logo.png";
-import { UserButton, useAuth } from "@clerk/nextjs";
-import { ThemeToggleButton } from "@/components/ui/theme-toggle-button";
+'use client';
 
-const Navbar = () => {
-  const { isSignedIn } = useAuth();
-  const [isScrolled, setIsScrolled] = useState(false);
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ThemeSwitch } from '@/components/ui/theme-switch';
+import Logo from "@/assets/logo.png";
+import { useAuth } from '@clerk/nextjs';
 
-  useEffect(() => {
-    const handleScroll = () => {
-      // Check if user has scrolled past 100vh
-      if (window.scrollY > window.innerHeight) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
+const transition = { duration: 0.9, ease: [0.76, 0, 0.24, 1] };
+const SLICE_COUNT = 6;
 
-    window.addEventListener('scroll', handleScroll);
+const navItems = [
+  { title: "Home", href: "/", img: `${Logo.src}` },
+  { title: "Events", href: "/events", img: "https://i.pinimg.com/1200x/39/2c/91/392c91abea80c680786f89d02d196607.jpg" },
+  { title: "Pricing", href: "/pricing", img: "https://i.pinimg.com/736x/56/62/e6/5662e60f3491e956e1720c862bc84f70.jpg" },
+  { title: "About", href: "/about", img: "https://i.pinimg.com/736x/46/23/e8/4623e8d6ffba32df8d04e732a323cf7e.jpg" },
+  { title: "Contact", href: "/contact", img: "https://i.pinimg.com/736x/f0/0f/41/f00f417f6599cb0f6a71544c531911f7.jpg" }
+];
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState(0);
+  const { isLoaded, isSignedIn } = useAuth();
 
   return (
-    <header className={`p-2 fixed top-0 z-50 w-full transition-all duration-300 ${isScrolled
-      ? "dark:bg-zinc-900 bg-zinc-50 backdrop-blur-3xl"
-      : "bg-transparent backdrop-blur-none"
-      }`}>
-      <div className="md:container mx-auto flex justify-between items-center md:px-5">
-        <Link
-          href="/"
-          className="h-10 w-auto flex gap-2 items-center p-1 rounded-md hover:bg-[rgba(225,225,225,0.05)] mr-3"
-        >
-          <Image
-            src={EzInvito}
-            alt="EzInvito Logo"
-            width={500}
-            height={500}
-            className="h-full w-auto invert dark:filter-none"
-          />
-          <span className="md:block hidden whitespace-nowrap">EzInvito</span>
-        </Link>
-
-        <nav className="lg:flex hidden md:border-l md:border-zinc-500 md:px-3 lg:flex-row flex-col flex-grow md:relative absolute md:w-auto w-full left-0 right-0 md:top-auto top-16 z-50 text-sm items-center">
-          <Link
-            href="/"
-            className="lg:inline-flex lg:w-auto px-3 py-2 rounded text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-[rgba(225,225,225,0.1)]"
-          >
-            Home
+    <>
+      <header className='w-full relative'>
+        <nav className='w-full flex flex-row items-center justify-between p-4 relative z-50'>
+          <Link href="/" className='flex items-center gap-2 hover:bg-accent-foreground/5 rounded-full px-2 py-1'>
+            <Image src={Logo} alt="Logo" width={100} height={100} className='size-8 dark:invert-0 invert' />
+            <span className='text-xl font-semibold'>EzInvito</span>
           </Link>
 
-<Link
-            href="/#features"
-            className="lg:inline-flex lg:w-auto px-3 py-2 rounded text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-[rgba(225,225,225,0.1)]"
-          >
-            Features
-          </Link>
-          
+          <div className='flex items-center gap-2'>
+            <div className='p-1 rounded-full flex flex-row items-center bg-teal-50 gap-0.5 border border-teal-950/10'>
+              {isLoaded && isSignedIn ? (
+                <Link href="/dashboard" className='px-4 py-2 rounded-l-full text-black bg-linear-to-l hover:from-teal-800 hover:to-teal-900 hover:text-white'>Dashboard</Link>
+              ) : (
+                <Link href="/auth/sign-in" className='px-4 py-2 rounded-l-full text-black bg-linear-to-l hover:from-teal-800 hover:to-teal-900 hover:text-white'>Sign in</Link>
+              )}
+              <Link href="/dashboard/create-event" className='px-4 py-2 bg-linear-to-r from-teal-800 to-teal-900 text-white rounded-r-full hover:from-teal-600'>Create event</Link>
 
-          <Link
-            href="/pricing"
-            className="lg:inline-flex lg:w-auto px-3 py-2 rounded text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-[rgba(225,225,225,0.1)]"
-          >
-            Pricing
-          </Link>
-          <Link
-            href="/about"
-            className="lg:inline-flex lg:w-auto px-3 py-2 rounded text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-[rgba(225,225,225,0.1)]"
-          >
-            About
-          </Link>
-          <Link
-            href="/contact"
-            className="lg:inline-flex lg:w-auto px-3 py-2 rounded text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-[rgba(225,225,225,0.1)]"
-          >
-            Contact
-          </Link>
+            </div>
+            <div className="pointer-events-auto">
+              <ThemeSwitch variant="circle-blur" start="top-right" />
+            </div>
+          </div>
         </nav>
 
-        <div className="flex items-center gap-2">
-          {isSignedIn ? (
-            <>
-              <Link
-                href="/dashboard"
-                className="relative px-4 py-2 text-sm mr-2 overflow-hidden font-medium text-gray-600 bg-gray-100 border dark:border-zinc-500 border-gray-100 rounded-full shadow-inner group"
-              >
-                <span className="absolute top-0 left-0 w-0 h-0 transition-all duration-200 border-t-2 border-gray-600 group-hover:w-full ease"></span>
-                <span className="absolute bottom-0 right-0 w-0 h-0 transition-all duration-200 border-b-2 border-gray-600 group-hover:w-full ease"></span>
-                <span className="absolute top-0 left-0 w-full h-0 transition-all duration-300 delay-200 bg-gray-600 group-hover:h-full ease"></span>
-                <span className="absolute bottom-0 left-0 w-full h-0 transition-all duration-300 delay-200 bg-gray-600 group-hover:h-full ease"></span>
-                <span className="absolute inset-0 w-full h-full duration-300 delay-300 bg-gray-900 opacity-0 group-hover:opacity-100"></span>
-                <span className="relative transition-colors duration-300 delay-200 group-hover:text-white ease">
-                  Dashboard
-                </span>
-              </Link>
-              <UserButton />
-            </>
-          ) : (
-            <Button asChild>
-              <Link
-                href="/auth/sign-in"
-              >
-                Login
-              </Link>
-            </Button>
-          )}
-          <ThemeToggleButton variant="circle-blur" start="top-right" />
-          <Sheet>
-            <SheetTrigger className="w-10 h-10 md:hidden flex justify-center items-center hover:bg-zinc-100 dark:hover:bg-[rgba(225,225,225,0.1)] rounded">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-4 h-4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 9h16.5m-16.5 6.75h16.5"
-                />
-              </svg>
-            </SheetTrigger>
-            <SheetContent className="bg-white dark:bg-black border-l-zinc-100/30">
-              <SheetHeader className="text-left">
-                <SheetTitle>Menu</SheetTitle>
-                <SheetDescription>
-                  Navigate Revive Edge. Break limits. Never give up.
-                </SheetDescription>
-              </SheetHeader>
-              <nav className="flex flex-col space-y-3 p-2">
-                {[
-                  { href: "/#features", title: "Features", description: "get to know why this platform exist and how better it is..." },
-                  { href: "/pricing", title: "Pricing", description: "Affordable plans for every event invitation sent to your guests." },
-                  { href: "/about", title: "About", description: "Learn more about us, our mission, and values and more." },
-                  { href: "/contact", title: "Contact", description: "Get in touch with us, just say HI and we will reach out to you." }
-                ].map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="block space-y-1 rounded-md p-3 transition-colors hover:bg-zinc-100 dark:hover:bg-[rgba(225,225,225,0.1)]"
-                  >
-                    <div className="text-sm font-medium leading-none">
-                      {link.title}
-                    </div>
-                    <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                      {link.description}
-                    </p>
-                  </Link>
-                ))}
-              </nav>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </div>
-    </header>
-  );
-};
+        <button
+          onClick={() => setIsOpen(true)}
+          className='size-14 dark:bg-white dark:text-black bg-black text-white rounded-full fixed bottom-8 top-auto mt-auto mx-auto left-0 right-0 flex justify-center items-center cursor-pointer z-40 shadow-2xl hover:scale-105 transition-transform duration-300'
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+          </svg>
+        </button>
+      </header>
 
-export default Navbar;
+      <AnimatePresence mode="wait">
+        {isOpen && (
+          <motion.div
+            initial={{ clipPath: 'circle(0% at 50% calc(100% - 60px))' }}
+            animate={{ clipPath: 'circle(150% at 50% calc(100% - 60px))' }}
+            exit={{ clipPath: 'circle(0% at 50% calc(100% - 60px))' }}
+            transition={transition}
+            className="fixed inset-0 z-60 bg-[#0a0a0a] text-white overflow-hidden flex items-center"
+          >
+            <motion.button
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              onClick={() => setIsOpen(false)}
+              className="absolute top-8 right-8 z-70 flex items-center gap-3 text-white/70 hover:text-white transition-colors cursor-pointer group"
+            >
+              <span className="text-xs font-bold uppercase tracking-[0.3em] group-hover:-translate-x-1 transition-transform">Close</span>
+              <div className="size-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+            </motion.button>
+
+            <div className="absolute inset-0 w-full h-full md:w-1/2 md:right-0 md:left-auto opacity-60 md:opacity-100 pointer-events-none overflow-hidden">
+              <AnimatePresence mode="popLayout">
+                <motion.div
+                  key={hoveredIndex}
+                  className="absolute inset-0 w-full h-full flex"
+                >
+                  {Array.from({ length: SLICE_COUNT }).map((_, i) => {
+                    const isEven = i % 2 === 0;
+
+                    return (
+                      <motion.div
+                        key={i}
+                        className="relative h-full overflow-hidden"
+                        style={{ width: `${100 / SLICE_COUNT}%` }}
+                        initial={{
+                          clipPath: isEven ? 'inset(100% 0 0 0)' : 'inset(0 0 100% 0)',
+                          filter: 'blur(20px) contrast(200%)',
+                          y: isEven ? 50 : -50
+                        }}
+                        animate={{
+                          clipPath: 'inset(0% 0 0 0)',
+                          filter: 'blur(0px) contrast(100%)',
+                          y: 0
+                        }}
+                        exit={{
+                          clipPath: isEven ? 'inset(0 0 100% 0)' : 'inset(100% 0 0 0)',
+                          filter: 'blur(20px) contrast(200%)',
+                          y: isEven ? -50 : 50
+                        }}
+                        transition={{
+                          ...transition,
+                          delay: i * 0.05
+                        }}
+                      >
+                        <motion.img
+                          src={navItems[hoveredIndex].img}
+                          alt={navItems[hoveredIndex].title}
+                          className="absolute top-0 h-full max-w-none object-cover"
+                          style={{
+                            width: `${SLICE_COUNT * 100}%`,
+                            left: `-${i * 100}%`
+                          }}
+                          initial={{ scale: 1.3 }}
+                          animate={{ scale: 1 }}
+                          exit={{ scale: 1.3 }}
+                          transition={{ ...transition, delay: i * 0.05 }}
+                        />
+                      </motion.div>
+                    );
+                  })}
+                </motion.div>
+              </AnimatePresence>
+              <div className="absolute inset-0 bg-linear-to-r from-[#0a0a0a] via-transparent to-transparent hidden md:block z-10"></div>
+            </div>
+
+            {/* Navigation Links */}
+            <div className="relative z-10 w-full px-8 md:px-24 flex flex-col justify-center h-full">
+              <ul className="flex flex-col gap-4">
+                {navItems.map((item, index) => (
+                  <motion.li
+                    key={item.title}
+                    onMouseEnter={() => setHoveredIndex(index)}
+                    initial={{ y: 50, opacity: 0, rotateX: -20 }}
+                    animate={{ y: 0, opacity: 1, rotateX: 0 }}
+                    exit={{ y: -50, opacity: 0, rotateX: 20 }}
+                    transition={{ ...transition, delay: 0.1 + (index * 0.05) }}
+                    style={{ perspective: 1000 }}
+                  >
+                    <Link
+                      href={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className={`text-5xl md:text-8xl font-black uppercase tracking-tighter transition-colors duration-500 block w-fit ${hoveredIndex === index ? 'text-teal-300' : 'text-white/40'}`}
+                    >
+                      <motion.span
+                        className="block origin-left"
+                        whileHover={{ skewX: -5, x: 20 }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
+                      >
+                        {item.title}
+                      </motion.span>
+                    </Link>
+                  </motion.li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="absolute inset-0 pointer-events-none opacity-[0.03] z-20 mix-blend-overlay bg-[url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Dissolve_Noise_Texture.png')]"></div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
