@@ -25,31 +25,87 @@ import { ThemeSwitch } from "../ui/theme-switch"
 const data = {
   navMain: [
     {
-      title: "Getting Started",
-      url: "#",
+      title: "Dashboard",
+      url: "/dashboard",
       items: [
         {
-          title: "Installation",
-          url: "#",
-        },
-        {
-          title: "Project Structure",
-          url: "#",
+          title: "Overview",
+          url: "/dashboard",
         },
       ],
     },
     {
-      title: "Community",
-      url: "#",
+      title: "Events",
+      url: "/dashboard/events",
       items: [
         {
-          title: "Contribution Guide",
-          url: "#",
+          title: "All Events",
+          url: "/dashboard/events",
+        },
+        {
+          title: "Create Event",
+          url: "/dashboard/events/create",
+        },
+      ],
+    },
+    {
+      title: "Invitations",
+      url: "/dashboard/invitations",
+      items: [
+        {
+          title: "All Invitations",
+          url: "/dashboard/invitations",
+        },
+        {
+          title: "Create Invitation",
+          url: "/dashboard/invitations/create",
+        },
+      ],
+    },
+    {
+      title: "Guests",
+      url: "/dashboard/guests",
+      items: [
+        {
+          title: "All Guests",
+          url: "/dashboard/guests",
+        },
+        {
+          title: "Add Guest",
+          url: "/dashboard/guests/add",
+        },
+      ],
+    },
+    {
+      title: "QR Codes",
+      url: "/dashboard/qr-entries",
+      items: [
+        {
+          title: "All QR Codes",
+          url: "/dashboard/qr-entries",
+        },
+        {
+          title: "Generate QR Code",
+          url: "/dashboard/qr-entries/create",
+        },
+        {
+          title: "Scan QR Code",
+          url: "/dashboard/qr-entries/scan",
+        },
+      ],
+    },
+    {
+      title: "Calendar",
+      url: "/dashboard/calendar",
+      items: [
+        {
+          title: "View Calendar",
+          url: "/dashboard/calendar",
         },
       ],
     },
   ],
-}
+};
 
 export function AppSidebar({
   ...props
@@ -115,7 +171,7 @@ export function AppSidebar({
 
                 <div className="flex flex-col min-w-0">
                   <span className="text-sm font-semibold leading-tight truncate">
-                    {user.fullName}
+                    {user.firstName} {user.lastName}
                   </span>
                   <span className="text-xs text-muted-foreground leading-tight truncate mt-0.5">
                     {user.emailAddresses[0].emailAddress}
